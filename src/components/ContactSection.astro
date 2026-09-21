@@ -1,0 +1,159 @@
+---
+import SectionLabel from "./SectionLabel.astro";
+import ContactForm from "./ContactForm.astro";
+import { site } from "../config/site";
+
+interface Props {
+  /** h1 on the dedicated contact page, h2 when embedded */
+  as?: "h1" | "h2";
+  num?: string;
+}
+
+const { as = "h2", num = "07" } = Astro.props;
+const Heading = as;
+const isPage = as === "h1";
+
+const next = [
+  "You tell us where you are and what you’re trying to achieve.",
+  "We get back to you to set up a first conversation.",
+  "We listen first — and only recommend what makes sense for your business.",
+];
+---
+
+<section
+  id="contact"
+  class:list={["section", "contact", { "section--rule": !isPage, "contact--page": isPage }]}
+  aria-labelledby="contact-title"
+  data-hide-mcta
+>
+  <div class="container contact__grid">
+    <div class="contact__intro">
+      <SectionLabel num={num} text="Contact" />
+      <Heading id="contact-title" class="h1 contact__title">
+        Let’s connect the dots<span class="dot"><span class="sr-only">.</span></span>
+      </Heading>
+      <p class="lead contact__lead">
+        Have a marketing challenge, a project to launch or simply need another perspective? Tell us where you are.
+      </p>
+
+      <div class="contact__next">
+        <p class="mono contact__kicker">What happens next</p>
+        <ol role="list" class="contact__steps">
+          {
+            next.map((step, i) => (
+              <li>
+                <span class="mono contact__num">{String(i + 1).padStart(2, "0")}</span>
+                <span>{step}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      {
+        site.email && (
+          <p class="small contact__direct">
+            Prefer email?{" "}
+            <a class="link" href={`mailto:${site.email}`}>
+              {site.email}
+            </a>
+          </p>
+        )
+      }
+    </div>
+
+    <div class="contact__panel">
+      <ContactForm />
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact::before {
+    content: "";
+    position: absolute;
+    top: -10%;
+    left: -15%;
+    width: 60%;
+    aspect-ratio: 1;
+    background: radial-gradient(closest-side, rgb(59 123 255 / 0.12), transparent);
+    pointer-events: none;
+  }
+
+  .contact--page {
+    padding-top: calc(var(--header-h) + var(--space-2xl));
+  }
+
+  .contact__grid {
+    position: relative;
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  @media (min-width: 62rem) {
+    .contact__grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+
+    .contact__intro {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+
+  .contact__title {
+    margin-top: var(--space-m);
+  }
+
+  .contact__lead {
+    margin-top: var(--space-m);
+  }
+
+  .contact__next {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+  }
+
+  .contact__kicker {
+    color: var(--fg-3);
+  }
+
+  .contact__steps {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: var(--space-m);
+  }
+
+  .contact__steps li {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.5rem;
+    color: var(--fg-2);
+  }
+
+  .contact__num {
+    padding-top: 0.25rem;
+    color: var(--accent);
+  }
+
+  .contact__direct {
+    margin-top: var(--space-l);
+    color: var(--fg-2);
+  }
+
+  .contact__panel {
+    padding: clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: linear-gradient(180deg, var(--bg-raise-2), var(--bg-raise));
+    box-shadow: 0 50px 120px -60px rgb(0 0 0 / 0.9);
+  }
+</style>

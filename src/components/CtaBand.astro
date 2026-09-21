@@ -1,0 +1,142 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  title: string;
+  text: string;
+  cta: string;
+  href: string;
+  accent: string;
+}
+
+const { title, text, cta, href, accent } = Astro.props;
+---
+
+<section class="section section--rule cta" style={`--accent: ${accent}`} aria-labelledby="cta-title" data-hide-mcta>
+  <div class="container cta__inner">
+    <div>
+      <h2 id="cta-title" class="h1 cta__title" data-reveal>{title}</h2>
+      <p class="lead cta__text" data-reveal style="--i: 1">{text}</p>
+      <div class="cta__actions" data-reveal style="--i: 2">
+        <a href={href} class="btn btn--primary">
+          <span class="btn__dot" aria-hidden="true"></span>
+          {cta}
+          <Icon name="arrow-up-right" class="btn__icon" />
+        </a>
+      </div>
+    </div>
+
+    <div class="cta__orbit" aria-hidden="true">
+      <span class="cta__ring cta__ring--outer"></span>
+      <span class="cta__ring"></span>
+      <span class="cta__spin"><span class="cta__planet"></span></span>
+      <span class="cta__core"></span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta::before {
+    content: "";
+    position: absolute;
+    right: -10%;
+    top: 50%;
+    width: 50rem;
+    aspect-ratio: 1;
+    transform: translateY(-50%);
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 12%, transparent), transparent);
+    pointer-events: none;
+  }
+
+  .cta__inner {
+    position: relative;
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  @media (min-width: 48rem) {
+    .cta__inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+
+  .cta__title {
+    max-width: 14ch;
+  }
+
+  .cta__text {
+    margin-top: var(--space-m);
+  }
+
+  .cta__actions {
+    margin-top: var(--space-l);
+  }
+
+  .cta__orbit {
+    position: relative;
+    width: clamp(12rem, 8rem + 12vw, 20rem);
+    aspect-ratio: 1;
+  }
+
+  @media (max-width: 47.99rem) {
+    .cta__orbit {
+      display: none;
+    }
+  }
+
+  .cta__ring {
+    position: absolute;
+    inset: 18%;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+  }
+
+  .cta__ring--outer {
+    inset: 0;
+    border-color: var(--line);
+  }
+
+  .cta__spin {
+    position: absolute;
+    inset: 0;
+    animation: cta-spin 26s linear infinite;
+  }
+
+  .cta__planet {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 20px var(--accent);
+  }
+
+  .cta__core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    border-radius: 50%;
+    background: var(--blue);
+    box-shadow:
+      0 0 30px 6px rgb(59 123 255 / 0.55),
+      0 0 90px 30px rgb(59 123 255 / 0.18);
+  }
+
+  @keyframes cta-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

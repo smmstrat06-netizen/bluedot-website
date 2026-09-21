@@ -1,0 +1,256 @@
+---
+const sparks = {
+  down: "M0 8 L20 10 L40 9 L60 16 L80 18 L100 24 L120 23 L140 29",
+  up: "M0 29 L20 26 L40 27 L60 19 L80 17 L100 11 L120 12 L140 5",
+  flat: "M0 30 L140 30",
+};
+
+const tiles = [
+  { label: "Cost per lead", value: "$1.20", sr: "", status: "On target", tone: "good", spark: sparks.down },
+  { label: "Click-through rate", value: "↑", sr: "Rising", status: "Rising", tone: "good", spark: sparks.up },
+  { label: "Cost per click", value: "↓", sr: "Falling", status: "Falling", tone: "good", spark: sparks.down },
+  { label: "Sales", value: "0", sr: "", status: "No business impact", tone: "bad", spark: sparks.flat },
+];
+---
+
+<figure class="dash" data-reveal>
+  <div class="dash__bar">
+    <span class="dash__lights" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="mono dash__title">Campaign overview</span>
+    <span class="mono dash__tag">Illustrative example</span>
+  </div>
+
+  <dl class="dash__grid">
+    {
+      tiles.map((t, i) => (
+        <div class:list={["dash__tile", `dash__tile--${t.tone}`]} style={`--i: ${i}`}>
+          <dt class="mono dash__label">{t.label}</dt>
+          <dd class="dash__value">
+            {t.sr ? (
+              <Fragment>
+                <span aria-hidden="true">{t.value}</span>
+                <span class="sr-only">{t.sr}</span>
+              </Fragment>
+            ) : (
+              t.value
+            )}
+          </dd>
+          <dd>
+            <span class:list={["pill", `pill--${t.tone}`]}>{t.status}</span>
+          </dd>
+          <dd class="dash__spark" aria-hidden="true">
+            <svg viewBox="0 0 140 36" preserveAspectRatio="none">
+              <path d={t.spark} />
+            </svg>
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <figcaption class="dash__caption">
+    <span class="dash__caption-dot" aria-hidden="true"></span>
+    Every campaign metric is green. The business didn’t move.
+  </figcaption>
+</figure>
+
+<style>
+  .dash {
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-m);
+    background: linear-gradient(180deg, var(--bg-raise-2), var(--bg-raise));
+    box-shadow: 0 60px 140px -60px rgb(0 0 0 / 0.9);
+  }
+
+  .dash__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dash__lights {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dash__lights i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.14);
+  }
+
+  .dash__title {
+    color: var(--fg-2);
+  }
+
+  .dash__tag {
+    margin-left: auto;
+    color: var(--fg-3);
+  }
+
+  .dash__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 62rem) {
+    .dash__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  /* Small screens: one compact row per metric */
+  @media (max-width: 35.99rem) {
+    .dash__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash__tile {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0.4rem 1rem;
+      padding: 1rem 1.25rem;
+      border-right: 0;
+    }
+
+    .dash__label {
+      grid-column: 1 / -1;
+    }
+
+    .dash__value {
+      font-size: var(--step-3);
+    }
+
+    .dash__spark {
+      display: none;
+    }
+  }
+
+  .dash__tile {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    padding: 1.4rem 1.25rem 1.1rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    transition:
+      opacity 0.8s var(--ease-out),
+      transform 0.8s var(--ease-out);
+    transition-delay: calc(var(--i) * 160ms + 200ms);
+  }
+
+  .dash__tile--bad {
+    transition-delay: 1s;
+    background: radial-gradient(120% 90% at 100% 0%, rgb(255 107 107 / 0.14), transparent 60%);
+  }
+
+  :global(html.reveal-ready) .dash:not(.is-in) .dash__tile {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .dash__label {
+    color: var(--fg-3);
+    letter-spacing: 0.08em;
+  }
+
+  .dash__value {
+    font-size: var(--step-4);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dash__tile--bad .dash__value {
+    color: #ff9494;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    width: fit-content;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .pill::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .pill--good {
+    color: var(--positive);
+    background: rgb(82 227 160 / 0.1);
+  }
+
+  .pill--bad {
+    color: #ff9494;
+    background: rgb(255 107 107 / 0.12);
+  }
+
+  .dash__spark svg {
+    width: 100%;
+    height: 2.25rem;
+    margin-top: 0.3rem;
+    overflow: visible;
+    clip-path: inset(-4px 0 -4px 0);
+    transition: clip-path 1.4s var(--ease-out);
+    transition-delay: calc(var(--i) * 160ms + 500ms);
+  }
+
+  :global(html.reveal-ready) .dash:not(.is-in) .dash__spark svg {
+    clip-path: inset(-4px 100% -4px 0);
+  }
+
+  .dash__spark path {
+    fill: none;
+    stroke: var(--positive);
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .dash__tile--bad .dash__spark path {
+    stroke: #ff9494;
+    stroke-dasharray: 3 5;
+  }
+
+  .dash__caption {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    color: var(--fg-2);
+  }
+
+  .dash__caption-dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--negative);
+    box-shadow: 0 0 0 0 rgb(255 107 107 / 0.6);
+    animation: dash-pulse 2.4s ease-out infinite;
+  }
+
+  @keyframes dash-pulse {
+    to {
+      box-shadow: 0 0 0 10px rgb(255 107 107 / 0);
+    }
+  }
+</style>

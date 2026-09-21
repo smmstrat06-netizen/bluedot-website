@@ -1,0 +1,324 @@
+---
+import { nav } from "../config/site";
+import { divisions } from "../data/divisions";
+import Icon from "./Icon.astro";
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path.startsWith(href);
+---
+
+<header class="header" data-header>
+  <div class="container header__inner">
+    <a href="/" class="brand" aria-label="BlueDot — home">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <span class="brand__word" aria-hidden="true">BlueDot</span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <ul role="list" class="nav__list">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="nav__link"
+                style={`--accent: ${item.accent}`}
+                aria-current={isCurrent(item.href) ? "page" : undefined}
+              >
+                <span class="nav__dot" aria-hidden="true" />
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <a href="/contact/" class="btn btn--primary btn--sm header__cta" aria-current={isCurrent("/contact/") ? "page" : undefined}>
+        Let’s talk
+        <Icon name="arrow-up-right" class="btn__icon" />
+      </a>
+      <button type="button" class="menu-btn" aria-expanded="false" aria-controls="site-menu" data-menu-open>
+        <span class="sr-only">Open menu</span>
+        <span class="menu-btn__lines" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="site-menu" role="dialog" aria-modal="true" aria-label="Site menu" data-menu hidden>
+  <div class="container menu__top">
+    <a href="/" class="brand" aria-label="BlueDot — home">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <span class="brand__word" aria-hidden="true">BlueDot</span>
+    </a>
+    <button type="button" class="menu__close" data-menu-close>
+      <span class="sr-only">Close menu</span>
+      <Icon name="close" class="menu__close-icon" />
+    </button>
+  </div>
+
+  <nav class="container menu__nav" aria-label="Mobile">
+    <ul role="list" class="menu__list">
+      {
+        divisions.map((d, i) => (
+          <li class="menu__item" style={`--accent: ${d.accent}; --i: ${i}`}>
+            <a href={d.href} class="menu__link" aria-current={isCurrent(d.href) ? "page" : undefined}>
+              <span class="menu__name">
+                {d.name}<span class="dot" style={`--dot: ${d.accent}`} />
+              </span>
+              <span class="mono menu__meta">
+                {d.index} — {d.verb}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+      <li class="menu__item" style="--i: 3">
+        <a href="/contact/" class="menu__link" aria-current={isCurrent("/contact/") ? "page" : undefined}>
+          <span class="menu__name">Contact</span>
+          <span class="mono menu__meta">04 — Talk</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="container menu__foot">
+    <a href="/contact/" class="btn btn--primary"><span class="btn__dot" aria-hidden="true"></span>Let’s talk</a>
+    <p class="small muted">Think. Create. Amplify.</p>
+  </div>
+</div>
+
+<script>
+  import "../scripts/header";
+</script>
+
+<style>
+  .header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    height: var(--header-h);
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color 0.4s var(--ease-out),
+      border-color 0.4s var(--ease-out);
+  }
+
+  .header.is-scrolled {
+    background: rgb(5 7 13 / 0.74);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border-bottom-color: var(--line);
+  }
+
+  .header__inner {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    font-size: 1.125rem;
+    font-weight: 560;
+    letter-spacing: -0.025em;
+  }
+
+  .brand__dot {
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 36% 34%, #dfe8ff 0%, var(--blue) 45%, #1c4ccc 100%);
+    box-shadow: 0 0 16px rgb(59 123 255 / 0.75);
+  }
+
+  .nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .nav__list {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.9375rem;
+    color: var(--fg-2);
+    transition: color var(--dur) var(--ease-out);
+  }
+
+  .nav__link:hover,
+  .nav__link[aria-current="page"] {
+    color: var(--fg);
+  }
+
+  .nav__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    transform: scale(0);
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .nav__link:hover .nav__dot,
+  .nav__link[aria-current="page"] .nav__dot {
+    transform: scale(1);
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .menu-btn,
+  .menu__close {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    transition: border-color var(--dur) var(--ease-out);
+  }
+
+  .menu-btn:hover,
+  .menu__close:hover {
+    border-color: var(--fg);
+  }
+
+  .menu-btn {
+    display: none;
+  }
+
+  .menu-btn__lines {
+    width: 16px;
+    height: 7px;
+    border-block: 1.5px solid currentColor;
+  }
+
+  .menu__close :global(.menu__close-icon) {
+    width: 18px;
+    height: 18px;
+  }
+
+  @media (max-width: 47.99rem) {
+    .nav {
+      display: none;
+    }
+
+    .menu-btn {
+      display: grid;
+    }
+  }
+
+  @media (max-width: 21rem) {
+    .header__cta {
+      display: none;
+    }
+  }
+
+  /* Mobile menu */
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    background:
+      radial-gradient(90% 50% at 80% 0%, rgb(59 123 255 / 0.12), transparent 70%),
+      var(--bg);
+    opacity: 0;
+    transition: opacity 0.35s var(--ease-out);
+  }
+
+  .menu.is-open {
+    opacity: 1;
+  }
+
+  .menu__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+    flex-shrink: 0;
+  }
+
+  .menu__nav {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow-y: auto;
+  }
+
+  .menu__list {
+    width: 100%;
+  }
+
+  .menu__item {
+    border-top: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.6s var(--ease-out),
+      transform 0.6s var(--ease-out);
+    transition-delay: calc(var(--i) * 60ms + 80ms);
+  }
+
+  .menu__item:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .menu.is-open .menu__item {
+    opacity: 1;
+    transform: none;
+  }
+
+  .menu__link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.05rem;
+  }
+
+  .menu__name {
+    font-size: clamp(2.25rem, 11vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .menu__meta {
+    color: var(--fg-3);
+  }
+
+  .menu__link[aria-current="page"] .menu__meta {
+    color: var(--fg);
+  }
+
+  .menu__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.5rem calc(1.5rem + env(safe-area-inset-bottom));
+  }
+</style>

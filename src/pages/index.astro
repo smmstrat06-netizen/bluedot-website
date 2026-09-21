@@ -1,0 +1,74 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HomeHero from "../components/home/HomeHero.astro";
+import Belief from "../components/home/Belief.astro";
+import Divisions from "../components/home/Divisions.astro";
+import SituationPicker from "../components/home/SituationPicker.astro";
+import HowWeWork from "../components/home/HowWeWork.astro";
+import SectionLabel from "../components/SectionLabel.astro";
+import SurfaceDiagram from "../components/SurfaceDiagram.astro";
+import FAQ from "../components/FAQ.astro";
+import ContactSection from "../components/ContactSection.astro";
+import Icon from "../components/Icon.astro";
+import { faqs } from "../data/home";
+import { faqSchema, organizationSchema, websiteSchema } from "../lib/schema";
+
+const base = Astro.site!;
+---
+
+<BaseLayout
+  title="BlueDot — Marketing Strategy, Creative & Media Under One Roof"
+  description="BlueDot connects marketing strategy, creative and media under one roof — consulting, fractional CMO, brand, content and media built around business impact."
+  schema={[organizationSchema(base), websiteSchema(base), faqSchema(faqs)]}
+>
+  <HomeHero />
+  <Belief />
+  <Divisions />
+  <SituationPicker />
+  <HowWeWork />
+
+  <section class="section section--rule" aria-labelledby="pov-title">
+    <div class="container split">
+      <SectionLabel num="05" text="Point of view" />
+      <div class="pov">
+        <div>
+          <h2 id="pov-title" class="h2" data-reveal>Your marketing problem might not be a marketing problem.</h2>
+          <p class="lead pov__lead" data-reveal style="--i: 1">
+            Too few leads, campaigns that don’t land, budget with little return — these are often symptoms. The cause
+            can sit below the surface. That’s where we look first.
+          </p>
+          <a href="/consulting/#below-the-surface" class="link pov__link" data-reveal style="--i: 2">
+            See what we look at
+            <Icon name="arrow-right" class="link__icon link__icon--right" />
+          </a>
+        </div>
+        <SurfaceDiagram compact />
+      </div>
+    </div>
+  </section>
+
+  <FAQ num="06" items={faqs} />
+  <ContactSection num="07" />
+</BaseLayout>
+
+<style>
+  .pov {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  @media (min-width: 62rem) {
+    .pov {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+  }
+
+  .pov__lead {
+    margin-top: var(--space-m);
+  }
+
+  .pov__link {
+    margin-top: var(--space-l);
+  }
+</style>

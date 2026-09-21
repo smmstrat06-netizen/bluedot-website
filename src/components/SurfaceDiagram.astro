@@ -1,0 +1,181 @@
+---
+interface Props {
+  /** Names only, without the diagnostic questions */
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+
+const layers = [
+  { name: "Positioning", q: "Is it clear who you’re for — and why they should choose you?" },
+  { name: "Offer", q: "Is what you sell easy to understand, compare and buy?" },
+  { name: "Organization", q: "Do your teams have the roles, skills and capacity to deliver?" },
+  { name: "Sales", q: "Does marketing hand over to a sales process that converts?" },
+  { name: "Leadership", q: "Is there one clear direction everyone is working toward?" },
+];
+
+// A repeating wave, drawn twice as wide as the box so it can loop
+const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22 : 6} ${(i + 1) * 50} 14`).join(" ");
+---
+
+<figure class:list={["surface", { "surface--compact": compact }]} data-reveal>
+  <div class="surface__above">
+    <p class="mono surface__zone">Above the surface</p>
+    <p class="surface__top">
+      <span class="surface__top-name">Marketing<span class="dot" style="--dot: var(--think)"></span></span>
+      {!compact && <span class="surface__symptoms">Too few leads · Campaigns that don’t land · Budget with little return</span>}
+    </p>
+  </div>
+
+  <div class="surface__water" aria-hidden="true">
+    <svg viewBox="0 0 1200 28" preserveAspectRatio="none">
+      <path d={`M0 14 ${wave}`}></path>
+    </svg>
+  </div>
+
+  <p class="mono surface__zone surface__zone--below">Below the surface</p>
+  <ol role="list" class="surface__layers">
+    {
+      layers.map((l, i) => (
+        <li class="surface__layer" style={`--d: ${i}`}>
+          <span class="surface__depth mono">−{String(i + 1).padStart(2, "0")}</span>
+          <span class="surface__name">{l.name}</span>
+          {!compact && <span class="surface__q">{l.q}</span>}
+        </li>
+      ))
+    }
+  </ol>
+
+  <figcaption class="sr-only">
+    Marketing is the visible layer. Below it sit positioning, offer, organization, sales and leadership.
+  </figcaption>
+</figure>
+
+<style>
+  .surface {
+    --pad: clamp(1.25rem, 0.9rem + 1.8vw, 2.25rem);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: linear-gradient(180deg, var(--bg-raise) 0%, #07102a 58%, #050a1c 100%);
+  }
+
+  .surface__above {
+    display: grid;
+    gap: 0.6rem;
+    padding: var(--pad) var(--pad) 1.25rem;
+  }
+
+  .surface__zone {
+    color: var(--fg-3);
+  }
+
+  .surface__zone--below {
+    padding: 1.25rem var(--pad) 0.75rem;
+    color: var(--blue-bright);
+  }
+
+  .surface__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .surface__top-name {
+    font-size: var(--step-3);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .surface__symptoms {
+    color: var(--fg-2);
+  }
+
+  .surface__water {
+    position: relative;
+    height: 28px;
+    overflow: hidden;
+  }
+
+  .surface__water::after {
+    content: "";
+    position: absolute;
+    inset: 14px 0 0;
+    background: linear-gradient(180deg, rgb(59 123 255 / 0.12), transparent);
+  }
+
+  .surface__water svg {
+    width: 200%;
+    max-width: none;
+    height: 100%;
+    animation: surface-wave 14s linear infinite;
+  }
+
+  .surface__water path {
+    fill: none;
+    stroke: var(--blue-bright);
+    stroke-opacity: 0.6;
+    stroke-width: 1.2;
+    vector-effect: non-scaling-stroke;
+  }
+
+  @keyframes surface-wave {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .surface__layer {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(9rem, 0.45fr) minmax(0, 1fr);
+    gap: 0.5rem 1rem;
+    align-items: baseline;
+    padding: 1.05rem var(--pad);
+    border-top: 1px solid rgb(122 165 255 / 0.1);
+    background: rgb(59 123 255 / calc(0.015 + var(--d) * 0.02));
+    transition:
+      background-color var(--dur) var(--ease-out),
+      opacity 0.8s var(--ease-out),
+      transform 0.8s var(--ease-out);
+    transition-delay: 0s, calc(var(--d) * 110ms + 250ms), calc(var(--d) * 110ms + 250ms);
+  }
+
+  .surface__layer:hover {
+    background: rgb(59 123 255 / calc(0.07 + var(--d) * 0.02));
+  }
+
+  :global(html.reveal-ready) .surface:not(.is-in) .surface__layer {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  .surface__depth {
+    color: var(--blue-bright);
+  }
+
+  .surface__name {
+    font-size: var(--step-1);
+    line-height: 1.3;
+  }
+
+  .surface__q {
+    color: var(--fg-2);
+  }
+
+  @media (max-width: 48rem) {
+    .surface__layer {
+      grid-template-columns: 2.75rem minmax(0, 1fr);
+    }
+
+    .surface__q {
+      grid-column: 2;
+    }
+  }
+
+  .surface--compact .surface__layer {
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    padding-block: 0.8rem;
+  }
+</style>

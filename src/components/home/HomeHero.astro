@@ -1,0 +1,258 @@
+---
+import CosmosCanvas from "../CosmosCanvas.astro";
+import Icon from "../Icon.astro";
+import { divisions } from "../../data/divisions";
+
+const words = [
+  { text: "Think", dot: "var(--think)" },
+  { text: "Create", dot: "var(--create)" },
+  { text: "Amplify", dot: "var(--amplify)" },
+];
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <CosmosCanvas scene="system" cx={0.72} cy={0.42} scale={0.42} />
+  <div class="hero__shade" aria-hidden="true"></div>
+
+  <div class="container hero__inner">
+    <p class="label hero__eyebrow">
+      <span class="label__dot" aria-hidden="true"></span>
+      Marketing strategy · Creative · Media
+    </p>
+
+    <h1 id="hero-title" class="display hero__title">
+      {
+        words.map((w, i) => (
+          <Fragment>
+            <span class="hero__word" style={`--dot: ${w.dot}; --d: ${i}`}>
+              {w.text}
+              <span class="dot">
+                <span class="sr-only">.</span>
+              </span>
+            </span>{" "}
+          </Fragment>
+        ))
+      }
+    </h1>
+
+    <p class="lead hero__lead">
+      BlueDot brings marketing strategy, creative execution and media performance together under one roof — so every part
+      of your marketing works toward the same business result.
+    </p>
+
+    <div class="hero__actions">
+      <a href="#contact" class="btn btn--primary">
+        <span class="btn__dot" aria-hidden="true"></span>
+        Let’s talk
+      </a>
+      <a href="#start" class="btn btn--ghost">
+        Find your starting point
+        <Icon name="arrow-down" class="btn__icon btn__icon--down" />
+      </a>
+    </div>
+  </div>
+
+  <nav class="container hero__index" aria-label="Explore our divisions">
+    <ul role="list" class="hindex">
+      {
+        divisions.map((d) => (
+          <li class="hindex__cell">
+            <a href={d.href} class="hindex__item" style={`--accent: ${d.accent}`}>
+              <span class="hindex__meta mono">
+                <span class="label__dot" aria-hidden="true" />
+                <span class="hindex__num">{d.index} —</span>
+                {d.verb}
+              </span>
+              <span class="hindex__name">{d.name}</span>
+              <span class="hindex__desc">{d.tagline}</span>
+              <Icon name="arrow-up-right" class="hindex__icon" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 100svh;
+    padding-top: calc(var(--header-h) + var(--space-2xl));
+    overflow: hidden;
+  }
+
+  .hero :global(.cosmos) {
+    z-index: -2;
+  }
+
+  .hero__shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgb(5 7 13 / 0.9) 0%, rgb(5 7 13 / 0.5) 36%, rgb(5 7 13 / 0) 62%),
+      linear-gradient(0deg, var(--bg) 0%, rgb(5 7 13 / 0) 32%);
+  }
+
+  @media (max-width: 47.99rem) {
+    .hero__shade {
+      background: linear-gradient(0deg, var(--bg) 30%, rgb(5 7 13 / 0.7) 62%, rgb(5 7 13 / 0) 100%);
+    }
+  }
+
+  .hero__inner {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .hero__eyebrow {
+    animation: fade 1.2s var(--ease-out) both;
+  }
+
+  .hero__title {
+    margin-top: var(--space-m);
+    max-width: 11ch;
+  }
+
+  .hero__word {
+    display: inline-block;
+    white-space: nowrap;
+    animation: rise 1.2s var(--ease-out) both;
+    animation-delay: calc(var(--d) * 110ms + 120ms);
+  }
+
+  .hero__lead {
+    margin-top: var(--space-l);
+    animation: rise 1.2s var(--ease-out) 0.5s both;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: var(--space-l);
+    animation: rise 1.2s var(--ease-out) 0.62s both;
+  }
+
+  .hero__index {
+    animation: fade 1.4s var(--ease-out) 0.8s both;
+  }
+
+  .hindex {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+  }
+
+  .hindex__cell + .hindex__cell {
+    border-left: 1px solid var(--line);
+  }
+
+  .hindex__item {
+    position: relative;
+    display: grid;
+    gap: 0.3rem;
+    height: 100%;
+    padding: 1.25rem 2.75rem 1.6rem 0;
+    transition: background-color var(--dur) var(--ease-out);
+  }
+
+  .hindex__cell + .hindex__cell .hindex__item {
+    padding-left: clamp(1rem, 0.5rem + 1.5vw, 2rem);
+  }
+
+  .hindex__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--fg-3);
+  }
+
+  .hindex__name {
+    font-size: var(--step-2);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .hindex__desc {
+    font-size: var(--step--1);
+    color: var(--fg-2);
+  }
+
+  .hindex__item :global(.hindex__icon) {
+    position: absolute;
+    top: 1.25rem;
+    right: 1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--fg-3);
+    transition:
+      transform var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out);
+  }
+
+  .hindex__item:hover :global(.hindex__icon) {
+    color: var(--accent);
+    transform: translate(3px, -3px);
+  }
+
+  .hindex__item::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.7s var(--ease-out);
+  }
+
+  .hindex__cell + .hindex__cell .hindex__item::after {
+    left: -1px;
+  }
+
+  .hindex__item:hover::after {
+    transform: scaleX(1);
+  }
+
+  @media (max-width: 47.99rem) {
+    .hero {
+      padding-top: 42svh;
+    }
+
+    .hero__inner {
+      padding-bottom: var(--space-xl);
+    }
+
+    .hindex__item {
+      padding: 1rem 0.5rem 1.25rem 0;
+    }
+
+    .hindex__cell + .hindex__cell .hindex__item {
+      padding-left: 0.75rem;
+    }
+
+    .hindex__name {
+      font-size: 1.0625rem;
+    }
+
+    .hindex__meta {
+      gap: 0.45rem;
+    }
+
+    .hindex__num {
+      display: none;
+    }
+
+    .hindex__desc,
+    .hindex__item :global(.hindex__icon) {
+      display: none;
+    }
+  }
+</style>

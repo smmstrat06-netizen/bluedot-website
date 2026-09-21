@@ -1,0 +1,176 @@
+---
+import SectionLabel from "./SectionLabel.astro";
+import Icon from "./Icon.astro";
+import { divisions, type DivisionId } from "../data/divisions";
+
+interface Props {
+  num: string;
+  current: DivisionId;
+  title: string;
+  text: string;
+}
+
+const { num, current, title, text } = Astro.props;
+const others = divisions.filter((d) => d.id !== current);
+---
+
+<section class="section section--rule" aria-labelledby="xlinks-title">
+  <div class="container">
+    <div class="split">
+      <SectionLabel num={num} text="Connected" />
+      <div>
+        <h2 id="xlinks-title" class="h2 xlinks__title" data-reveal>{title}</h2>
+        <p class="lead xlinks__lead" data-reveal style="--i: 1">{text}</p>
+      </div>
+    </div>
+
+    <ul role="list" class="xlinks offset">
+      {
+        others.map((d, i) => (
+          <li data-reveal style={`--i: ${i}`}>
+            <a href={d.href} class="xcard" style={`--accent: ${d.accent}`}>
+              <span class="xcard__orbit" aria-hidden="true">
+                <span class="xcard__spin">
+                  <span class="xcard__planet" />
+                </span>
+              </span>
+              <span class="mono xcard__meta">
+                {d.index} — {d.verb}
+              </span>
+              <span class="xcard__name">
+                BlueDot {d.name}<span class="dot" style={`--dot: ${d.accent}`} />
+              </span>
+              <span class="xcard__text">{d.summary}</span>
+              <span class="xcard__cta">
+                Explore {d.name}
+                <Icon name="arrow-right" class="xcard__icon" />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .xlinks__title {
+    max-width: 22ch;
+  }
+
+  .xlinks__lead {
+    margin-top: var(--space-m);
+  }
+
+  .xlinks {
+    display: grid;
+    gap: var(--grid-gap);
+    margin-top: var(--space-2xl);
+  }
+
+  @media (min-width: 48rem) {
+    .xlinks {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .xlinks li {
+    display: flex;
+  }
+
+  .xcard {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    width: 100%;
+    min-height: 19rem;
+    padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-raise);
+    transition:
+      border-color 0.5s var(--ease-out),
+      background-color 0.5s var(--ease-out);
+  }
+
+  .xcard:hover {
+    border-color: color-mix(in oklab, var(--accent) 55%, transparent);
+    background: var(--bg-raise-2);
+  }
+
+  .xcard__orbit {
+    position: absolute;
+    top: -3.5rem;
+    right: -3.5rem;
+    width: 11rem;
+    height: 11rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    transition: border-color 0.5s var(--ease-out);
+  }
+
+  .xcard:hover .xcard__orbit {
+    border-color: color-mix(in oklab, var(--accent) 50%, transparent);
+  }
+
+  .xcard__spin {
+    position: absolute;
+    inset: 0;
+    animation: xcard-spin 22s linear infinite;
+  }
+
+  .xcard__planet {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 14px var(--accent);
+  }
+
+  @keyframes xcard-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .xcard__meta {
+    color: var(--fg-3);
+  }
+
+  .xcard__name {
+    margin-top: var(--space-xl);
+    font-size: var(--step-4);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .xcard__text {
+    max-width: 40ch;
+    color: var(--fg-2);
+  }
+
+  .xcard__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-s);
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .xcard :global(.xcard__icon) {
+    width: 1em;
+    height: 1em;
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .xcard:hover :global(.xcard__icon) {
+    transform: translateX(4px);
+  }
+</style>

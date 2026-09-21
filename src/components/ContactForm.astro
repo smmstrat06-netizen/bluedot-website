@@ -1,0 +1,367 @@
+---
+import { site } from "../config/site";
+import Icon from "./Icon.astro";
+
+const interests = [
+  { value: "consulting", label: "Consulting", hint: "Strategy & leadership", accent: "var(--think)" },
+  { value: "agency", label: "Agency", hint: "Brand, content & digital", accent: "var(--create)" },
+  { value: "media", label: "Media", hint: "Planning, buying & performance", accent: "var(--amplify)" },
+  { value: "unsure", label: "Not sure yet", hint: "Help us find the right start", accent: "var(--blue)" },
+];
+---
+
+<form class="form" data-contact-form data-endpoint={site.formEndpoint} data-email={site.email} novalidate>
+  <div class="form__row">
+    <div class="field">
+      <label class="field__label" for="cf-name">Name</label>
+      <input class="field__input" id="cf-name" name="name" type="text" autocomplete="name" required aria-describedby="cf-name-error" />
+      <p class="field__error" id="cf-name-error" data-error-for="name"></p>
+    </div>
+    <div class="field">
+      <label class="field__label" for="cf-company">Company</label>
+      <input class="field__input" id="cf-company" name="company" type="text" autocomplete="organization" required aria-describedby="cf-company-error" />
+      <p class="field__error" id="cf-company-error" data-error-for="company"></p>
+    </div>
+  </div>
+
+  <div class="form__row">
+    <div class="field">
+      <label class="field__label" for="cf-email">Work email</label>
+      <input class="field__input" id="cf-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="cf-email-error" />
+      <p class="field__error" id="cf-email-error" data-error-for="email"></p>
+    </div>
+    <div class="field">
+      <label class="field__label" for="cf-phone">Phone <span class="field__opt">Optional</span></label>
+      <input class="field__input" id="cf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" />
+    </div>
+  </div>
+
+  <fieldset class="field field--group">
+    <legend class="field__label">What can we help with? <span class="field__opt">Choose any</span></legend>
+    <div class="choices">
+      {
+        interests.map((item) => (
+          <label class="choice" style={`--accent: ${item.accent}`}>
+            <input type="checkbox" name="interest" value={item.value} />
+            <span class="choice__box" aria-hidden="true">
+              <Icon name="check" class="choice__check" />
+            </span>
+            <span class="choice__label">{item.label}</span>
+            <span class="choice__hint">{item.hint}</span>
+          </label>
+        ))
+      }
+    </div>
+  </fieldset>
+
+  <div class="field">
+    <label class="field__label" for="cf-message">Tell us about your challenge</label>
+    <p class="field__hint" id="cf-message-hint">
+      A few lines is enough: where you are, what isn’t working, and what you’d like to achieve.
+    </p>
+    <textarea class="field__input field__input--area" id="cf-message" name="message" rows="5" required aria-describedby="cf-message-hint cf-message-error"></textarea>
+    <p class="field__error" id="cf-message-error" data-error-for="message"></p>
+  </div>
+
+  <div class="form__trap" aria-hidden="true">
+    <label for="cf-website">Leave this field empty</label>
+    <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="form__footer">
+    <button type="submit" class="btn btn--primary form__submit">
+      <span class="btn__dot" aria-hidden="true"></span>
+      <span data-submit-label>Send message</span>
+    </button>
+    <p class="small muted form__privacy">We only use your details to reply to your enquiry.</p>
+  </div>
+
+  <p class="form__status" role="alert" data-form-status></p>
+</form>
+
+<div class="success" data-form-success tabindex="-1" hidden>
+  <span class="success__mark" aria-hidden="true"><Icon name="check" /></span>
+  <h3 class="success__title">Thanks<span data-success-name></span> — your message is in.</h3>
+  <p class="body">
+    We’ll get back to you to set up a first conversation. In the meantime, feel free to look around.
+  </p>
+  <div class="success__links">
+    <a href="/consulting/" class="link">Consulting</a>
+    <a href="/agency/" class="link">Agency</a>
+    <a href="/media/" class="link">Media</a>
+  </div>
+</div>
+
+<script>
+  import "../scripts/form";
+</script>
+
+<style>
+  .form {
+    display: grid;
+    gap: 1.35rem;
+  }
+
+  .form__row {
+    display: grid;
+    gap: 1.35rem;
+  }
+
+  @media (min-width: 36rem) {
+    .form__row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .field {
+    display: grid;
+    gap: 0.45rem;
+    align-content: start;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .field__label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  .field--group .field__label {
+    margin-bottom: 0.45rem;
+  }
+
+  .field__opt {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+
+  .field__hint {
+    margin-top: -0.1rem;
+    font-size: var(--step--1);
+    line-height: 1.45;
+    color: var(--fg-3);
+  }
+
+  .field__input {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 1rem;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  .field__input:hover {
+    border-color: rgb(255 255 255 / 0.3);
+  }
+
+  .field__input:focus {
+    outline: none;
+    border-color: var(--blue-bright);
+    box-shadow: 0 0 0 3px rgb(59 123 255 / 0.28);
+  }
+
+  .field__input--area {
+    min-height: 9rem;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  .field__input[aria-invalid="true"] {
+    border-color: var(--negative);
+  }
+
+  .field__input[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px rgb(255 107 107 / 0.25);
+  }
+
+  .field__error,
+  .form__status {
+    font-size: var(--step--1);
+    line-height: 1.4;
+    color: #ff9494;
+  }
+
+  .field__error:empty,
+  .form__status:empty {
+    display: none;
+  }
+
+  .choices {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  @media (min-width: 36rem) {
+    .choices {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .choice {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.1rem 0.8rem;
+    align-items: center;
+    min-height: 3.75rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .choice:hover {
+    border-color: rgb(255 255 255 / 0.3);
+  }
+
+  .choice input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .choice__box {
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    color: var(--bg);
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .choice__box :global(.choice__check) {
+    width: 0.8rem;
+    height: 0.8rem;
+    stroke-width: 2.4;
+    opacity: 0;
+  }
+
+  .choice__label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .choice__hint {
+    font-size: 0.8125rem;
+    line-height: 1.3;
+    color: var(--fg-3);
+  }
+
+  .choice:has(:checked) {
+    border-color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 8%, transparent);
+  }
+
+  .choice:has(:checked) .choice__box {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .choice:has(:checked) .choice__box :global(.choice__check) {
+    opacity: 1;
+  }
+
+  .choice:has(:focus-visible) {
+    outline: 2px solid var(--blue-bright);
+    outline-offset: 2px;
+  }
+
+  .form__trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .form__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .form__submit[disabled] {
+    opacity: 0.75;
+    cursor: progress;
+  }
+
+  .form__privacy {
+    max-width: 30ch;
+  }
+
+  .success {
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+    padding-block: var(--space-l);
+    outline: none;
+    animation: rise 0.7s var(--ease-out) both;
+  }
+
+  .success[hidden] {
+    display: none;
+  }
+
+  .success__mark {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 0 30px rgb(59 123 255 / 0.6);
+  }
+
+  .success__mark :global(svg) {
+    width: 1.3rem;
+    height: 1.3rem;
+    stroke-width: 2.2;
+  }
+
+  .success__title {
+    margin-top: var(--space-2xs);
+    font-size: var(--step-3);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .success__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: var(--space-s);
+  }
+</style>

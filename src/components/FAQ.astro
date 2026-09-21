@@ -1,0 +1,125 @@
+---
+import SectionLabel from "./SectionLabel.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+  num: string;
+  items: { q: string; a: string }[];
+  title?: string;
+}
+
+const { num, items, title = "Good to know before we talk." } = Astro.props;
+---
+
+<section class="section section--rule faq" aria-labelledby="faq-title">
+  <div class="container split">
+    <SectionLabel num={num} text="Questions" />
+    <div class="faq__grid">
+      <h2 id="faq-title" class="h2" data-reveal>{title}</h2>
+      <div class="faq__list" data-reveal style="--i: 1">
+        {
+          items.map((item) => (
+            <details class="faq__item">
+              <summary class="faq__q">
+                <span>{item.q}</span>
+                <span class="faq__icon" aria-hidden="true">
+                  <Icon name="plus" />
+                </span>
+              </summary>
+              <div class="faq__a">
+                <p class="body">{item.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq__grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 75rem) {
+    .faq__grid {
+      grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+
+  .faq__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 3.5rem;
+    padding-block: 1.1rem;
+    font-size: var(--step-1);
+    line-height: 1.35;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    transition:
+      transform 0.4s var(--ease-out),
+      border-color var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out);
+  }
+
+  .faq__icon :global(svg) {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .faq__q:hover .faq__icon {
+    border-color: var(--fg);
+  }
+
+  .faq__item[open] .faq__icon {
+    transform: rotate(45deg);
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+  }
+
+  .faq__a {
+    padding: 0 3.5rem 1.4rem 0;
+  }
+
+  .faq__item::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 0.5s var(--ease-out),
+      content-visibility 0.5s allow-discrete;
+  }
+
+  .faq__item[open]::details-content {
+    block-size: auto;
+    block-size: calc-size(auto, size);
+  }
+</style>

@@ -1,0 +1,155 @@
+---
+const links = ["Great idea", "Craft", "Content", "Execution"];
+---
+
+<figure class="chain" data-reveal>
+  <ol role="list" class="chain__list">
+    {
+      links.map((name, i) => (
+        <li class="chain__node" style={`--i: ${i}`}>
+          <span class="chain__dot" aria-hidden="true" />
+          <span class="mono chain__num">{String(i + 1).padStart(2, "0")}</span>
+          <span class="chain__name">{name}</span>
+        </li>
+      ))
+    }
+    <li class="chain__node chain__node--end" style="--i: 4">
+      <span class="chain__dot" aria-hidden="true"></span>
+      <span class="mono chain__num">Result</span>
+      <span class="chain__name">A campaign that works</span>
+    </li>
+  </ol>
+  <figcaption class="body chain__caption">
+    Every link has to hold. Skip one, and a great idea never reaches the people it was made for.
+  </figcaption>
+</figure>
+
+<style>
+  .chain__list {
+    position: relative;
+    display: grid;
+    gap: var(--space-l);
+    padding-left: 2.25rem;
+  }
+
+  .chain__list::before,
+  .chain__list::after {
+    content: "";
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: var(--line-strong);
+  }
+
+  .chain__list::after {
+    background: linear-gradient(180deg, var(--create), var(--blue));
+    transform-origin: top;
+    transition: transform 2s var(--ease-out) 0.2s;
+  }
+
+  :global(html.reveal-ready) .chain:not(.is-in) .chain__list::after {
+    transform: scaleY(0);
+  }
+
+  @media (min-width: 75rem) {
+    .chain__list {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: var(--grid-gap);
+      padding-left: 0;
+      padding-top: 2.5rem;
+    }
+
+    .chain__list::before,
+    .chain__list::after {
+      top: 0.5rem;
+      right: 0;
+      bottom: auto;
+      width: auto;
+      height: 1px;
+    }
+
+    .chain__list::after {
+      background: linear-gradient(90deg, var(--create), var(--blue));
+      transform-origin: left;
+    }
+
+    :global(html.reveal-ready) .chain:not(.is-in) .chain__list::after {
+      transform: scaleX(0);
+    }
+  }
+
+  .chain__node {
+    position: relative;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .chain__dot {
+    position: absolute;
+    left: -2.25rem;
+    top: 0.15rem;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--bg);
+  }
+
+  @media (min-width: 75rem) {
+    .chain__dot {
+      left: 0;
+      top: -2.5rem;
+    }
+  }
+
+  .chain__dot::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--create);
+    box-shadow: 0 0 10px var(--create);
+    transition: transform 0.6s var(--ease-out);
+    transition-delay: calc(var(--i) * 380ms + 250ms);
+  }
+
+  :global(html.reveal-ready) .chain:not(.is-in) .chain__dot::after {
+    transform: scale(0);
+  }
+
+  .chain__node--end .chain__dot {
+    border-color: var(--blue);
+  }
+
+  .chain__node--end .chain__dot::after {
+    width: 8px;
+    height: 8px;
+    background: var(--blue);
+    box-shadow: 0 0 16px var(--blue);
+  }
+
+  .chain__num {
+    color: var(--fg-3);
+  }
+
+  .chain__name {
+    font-size: var(--step-2);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .chain__node--end .chain__name {
+    color: var(--blue-bright);
+  }
+
+  .chain__caption {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+  }
+</style>

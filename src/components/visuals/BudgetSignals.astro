@@ -1,0 +1,150 @@
+---
+const rows = [
+  { id: "scale", verb: "Scale", when: "When it’s working", note: "More budget behind what performs." },
+  { id: "move", verb: "Move", when: "When it works harder elsewhere", note: "Investment shifts to where it earns more." },
+  { id: "stop", verb: "Stop", when: "When it isn’t paying off", note: "Budget freed for what matters." },
+];
+---
+
+<figure class="signals" data-reveal>
+  <ul role="list" class="signals__list">
+    {
+      rows.map((r, i) => (
+        <li class:list={["signal", `signal--${r.id}`]} style={`--i: ${i}`}>
+          <div>
+            <p class="signal__verb">{r.verb}</p>
+            <p class="mono signal__when">{r.when}</p>
+          </div>
+          <div class="signal__track" aria-hidden="true">
+            <span class="signal__ghost" />
+            <span class="signal__bar" />
+          </div>
+          <p class="small signal__note">{r.note}</p>
+        </li>
+      ))
+    }
+  </ul>
+  <figcaption class="mono signals__caption">Illustrative budget decisions</figcaption>
+</figure>
+
+<style>
+  .signals__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .signal {
+    display: grid;
+    gap: 0.75rem 2rem;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (min-width: 48rem) {
+    .signal {
+      grid-template-columns: minmax(12rem, 0.34fr) minmax(0, 1fr);
+      align-items: center;
+    }
+
+    .signal__note {
+      grid-column: 2;
+    }
+  }
+
+  .signal__verb {
+    font-size: var(--step-3);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .signal__when {
+    margin-top: 0.5rem;
+    color: var(--fg-3);
+  }
+
+  .signal__note {
+    color: var(--fg-2);
+  }
+
+  .signal__track {
+    position: relative;
+    height: 2.75rem;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-s);
+    background-image: linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 10% 100%;
+  }
+
+  .signal__bar,
+  .signal__ghost {
+    position: absolute;
+    top: 0.55rem;
+    bottom: 0.55rem;
+    left: 0.55rem;
+    border-radius: 3px;
+  }
+
+  .signal__ghost {
+    border: 1px dashed rgb(255 255 255 / 0.28);
+  }
+
+  .signal__bar {
+    transform-origin: left center;
+    transition:
+      transform 1.6s var(--ease-out),
+      opacity 1.6s var(--ease-out);
+    transition-delay: calc(var(--i) * 280ms + 350ms);
+  }
+
+  /* Scale: grows from the old level to a larger share */
+  .signal--scale .signal__ghost {
+    width: 36%;
+  }
+
+  .signal--scale .signal__bar {
+    width: calc(100% - 1.1rem);
+    background: linear-gradient(90deg, color-mix(in oklab, var(--amplify) 70%, transparent), var(--amplify));
+    transform: scaleX(0.86);
+  }
+
+  :global(html.reveal-ready) .signals:not(.is-in) .signal--scale .signal__bar {
+    transform: scaleX(0.36);
+  }
+
+  /* Move: the same budget shifts to another position */
+  .signal--move .signal__ghost {
+    width: 30%;
+  }
+
+  .signal--move .signal__bar {
+    width: 30%;
+    background: var(--blue-bright);
+    transform: translateX(200%);
+  }
+
+  :global(html.reveal-ready) .signals:not(.is-in) .signal--move .signal__bar {
+    transform: translateX(0);
+  }
+
+  /* Stop: spend drops away, leaving only the outline of what was there */
+  .signal--stop .signal__ghost {
+    width: 54%;
+  }
+
+  .signal--stop .signal__bar {
+    width: 54%;
+    background: rgb(255 255 255 / 0.45);
+    transform: scaleX(0);
+    opacity: 0;
+  }
+
+  :global(html.reveal-ready) .signals:not(.is-in) .signal--stop .signal__bar {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+
+  .signals__caption {
+    margin-top: var(--space-s);
+    color: var(--fg-3);
+  }
+</style>

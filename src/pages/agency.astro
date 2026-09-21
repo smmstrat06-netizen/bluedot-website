@@ -1,0 +1,150 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import DivisionHero from "../components/DivisionHero.astro";
+import Positioning from "../components/Positioning.astro";
+import ServicesSection from "../components/ServicesSection.astro";
+import SectionLabel from "../components/SectionLabel.astro";
+import ExecutionChain from "../components/visuals/ExecutionChain.astro";
+import CrossLinks from "../components/CrossLinks.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { getDivision } from "../data/divisions";
+import { divisionSchema } from "../lib/schema";
+
+const d = getDivision("agency");
+
+const principles: [string, string][] = [
+  ["Strategy", "before output."],
+  ["Ideas", "built to be executed."],
+  ["The right talent", "for the right challenge."],
+  ["One consistent brand", "across every touchpoint."],
+];
+---
+
+<BaseLayout
+  title={d.seo.title}
+  description={d.seo.description}
+  image="/og/agency.png"
+  accent={d.accent}
+  schema={divisionSchema(d, Astro.site!)}
+>
+  <DivisionHero division={d} lead="We turn strategy into things people can see, experience and act on." />
+
+  <Positioning
+    num="01"
+    title="Ideas matter. Execution makes them real."
+    text="BlueDot Agency brings strategy, creativity and execution together to build brand experiences that are coherent, distinctive and effective."
+    fit={[
+      "Your strategy is clear and now needs to be brought to life.",
+      "Your brand looks and sounds different on every channel.",
+      "You need content, digital or campaigns that drive action — not just attention.",
+    ]}
+  />
+
+  <ServicesSection
+    num="02"
+    title="What we create."
+    lead="Open a service to see the problem it solves, what we do and what you get."
+    services={d.services}
+    group="agency-services"
+  />
+
+  <section class="section section--rule" aria-labelledby="craft-title">
+    <div class="container">
+      <div class="split">
+        <SectionLabel num="03" text="How we work" />
+        <h2 id="craft-title" class="h2" data-reveal>Craft, with a reason behind it.</h2>
+      </div>
+      <ul role="list" class="craft offset">
+        {
+          principles.map(([a, b], i) => (
+            <li class="craft__row" data-reveal style={`--i: ${i}`}>
+              <span class="mono craft__num">{String(i + 1).padStart(2, "0")}</span>
+              <span class="craft__a">{a}</span>
+              <span class="craft__b">{b}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--rule" aria-labelledby="chain-title">
+    <div class="container">
+      <div class="split">
+        <SectionLabel num="04" text="Point of view" />
+        <div>
+          <h2 id="chain-title" class="h2" data-reveal>A great idea poorly executed is still a bad campaign.</h2>
+          <p class="lead page__lead" data-reveal style="--i: 1">
+            Ideas only count once they reach people. That’s why strategy, craft, content and execution are handled as
+            one chain — so nothing gets lost between the brief and the result.
+          </p>
+        </div>
+      </div>
+      <div class="offset page__visual">
+        <ExecutionChain />
+      </div>
+    </div>
+  </section>
+
+  <CrossLinks
+    num="05"
+    current="agency"
+    title="Ideas with a strategy behind them — and media in front."
+    text="BlueDot Consulting sharpens the direction before we create. BlueDot Media makes sure the work reaches the right people."
+  />
+
+  <CtaBand
+    title="Have something to bring to life?"
+    text="A brand, a campaign, a website or a launch — tell us what you’re making."
+    cta={d.cta}
+    href="/contact/?interest=agency"
+    accent={d.accent}
+  />
+</BaseLayout>
+
+<style>
+  .page__lead {
+    margin-top: var(--space-m);
+  }
+
+  .page__visual {
+    margin-top: var(--space-2xl);
+  }
+
+  .craft {
+    margin-top: var(--space-2xl);
+    border-top: 1px solid var(--line);
+  }
+
+  .craft__row {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 0.25rem 1rem;
+    align-items: baseline;
+    padding-block: clamp(1.25rem, 1rem + 1vw, 2rem);
+    border-bottom: 1px solid var(--line);
+    font-size: var(--step-3);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .craft__num {
+    color: var(--fg-3);
+    letter-spacing: 0.12em;
+  }
+
+  .craft__b {
+    grid-column: 2;
+    color: var(--fg-3);
+  }
+
+  @media (min-width: 48rem) {
+    .craft__row {
+      grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .craft__b {
+      grid-column: 3;
+    }
+  }
+</style>

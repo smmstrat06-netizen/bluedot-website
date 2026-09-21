@@ -1,0 +1,51 @@
+---
+import "@fontsource-variable/host-grotesk";
+import "@fontsource-variable/geist-mono";
+import "../styles/global.css";
+import hostGroteskLatin from "@fontsource-variable/host-grotesk/files/host-grotesk-latin-wght-normal.woff2?url";
+import SEO from "../components/SEO.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import MobileCta from "../components/MobileCta.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  noindex?: boolean;
+  schema?: Record<string, unknown>[];
+  /** Division colour applied to dots, links and buttons on this page */
+  accent?: string;
+  /** Sticky "Let's talk" bar on small screens */
+  mobileCta?: boolean;
+}
+
+const { title, description, image, noindex, schema, accent, mobileCta = true } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#05070d" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href={hostGroteskLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <SEO title={title} description={description} image={image} noindex={noindex} schema={schema} />
+  </head>
+  <body style={accent ? `--accent: ${accent}` : undefined}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    {mobileCta && <MobileCta />}
+    <script>
+      import "../scripts/reveal";
+    </script>
+  </body>
+</html>

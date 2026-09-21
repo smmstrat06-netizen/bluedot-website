@@ -1,0 +1,240 @@
+---
+import SectionLabel from "../SectionLabel.astro";
+
+const rows = [
+  { id: "strategy", term: "Strategy", rest: "without execution stays on paper.", color: "var(--think)" },
+  { id: "creativity", term: "Creativity", rest: "without direction creates noise.", color: "var(--create)" },
+  { id: "media", term: "Media", rest: "without the right thinking wastes budget.", color: "var(--amplify)" },
+];
+
+// Triangle of disciplines around BlueDot at the centroid
+const core = { x: 260, y: 283 };
+const nodes = [
+  { id: "strategy", x: 260, y: 70, label: "STRATEGY", ly: 34, color: "var(--think)" },
+  { id: "creativity", x: 80, y: 390, label: "CREATIVITY", ly: 436, color: "var(--create)" },
+  { id: "media", x: 440, y: 390, label: "MEDIA", ly: 436, color: "var(--amplify)" },
+];
+---
+
+<section class="section belief" aria-labelledby="belief-title">
+  <div class="container split">
+    <SectionLabel num="01" text="Why connected" />
+
+    <div class="belief__grid">
+      <div class="belief__text">
+        <h2 id="belief-title" class="h2" data-reveal>Marketing works better when everything connects.</h2>
+
+        <ul role="list" class="belief__rows">
+          {
+            rows.map((r, i) => (
+              <li class="belief__row" data-node={r.id} style={`--accent: ${r.color}; --i: ${i + 1}`} data-reveal>
+                <span class="belief__term">
+                  <span class="label__dot" aria-hidden="true" />
+                  {r.term}
+                </span>
+                <span class="belief__rest">{r.rest}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="body belief__close" data-reveal>
+          BlueDot connects all three. Strategy, creative and media work as one team — three complementary areas of
+          expertise, pointed at one business objective.
+        </p>
+      </div>
+
+      <figure class="cd" data-reveal aria-hidden="true">
+        <svg viewBox="0 0 520 470" fill="none">
+          <defs>
+            <radialGradient id="cd-core-glow">
+              <stop offset="0" stop-color="#3b7bff" stop-opacity="0.55"></stop>
+              <stop offset="1" stop-color="#3b7bff" stop-opacity="0"></stop>
+            </radialGradient>
+          </defs>
+
+          <g class="cd__edges">
+            <line x1={nodes[0].x} y1={nodes[0].y} x2={nodes[1].x} y2={nodes[1].y}></line>
+            <line x1={nodes[1].x} y1={nodes[1].y} x2={nodes[2].x} y2={nodes[2].y}></line>
+            <line x1={nodes[2].x} y1={nodes[2].y} x2={nodes[0].x} y2={nodes[0].y}></line>
+          </g>
+
+          {
+            nodes.map((n, i) => (
+              <line
+                class="cd__link"
+                pathLength="1"
+                x1={n.x}
+                y1={n.y}
+                x2={core.x}
+                y2={core.y}
+                style={`--c: ${n.color}; --i: ${i}`}
+              />
+            ))
+          }
+
+          <circle class="cd__core-glow" cx={core.x} cy={core.y} r="96" fill="url(#cd-core-glow)"></circle>
+          <circle class="cd__core" cx={core.x} cy={core.y} r="10"></circle>
+          <text class="cd__label cd__label--core" x={core.x} y={core.y + 42} text-anchor="middle">BLUEDOT</text>
+
+          {
+            nodes.map((n) => (
+              <g class="cd__node" data-node={n.id} style={`--c: ${n.color}`}>
+                <circle class="cd__halo" cx={n.x} cy={n.y} r="24" />
+                <circle class="cd__ring" cx={n.x} cy={n.y} r="13" />
+                <circle class="cd__dot" cx={n.x} cy={n.y} r="5" />
+                <text class="cd__label" x={n.x} y={n.ly} text-anchor="middle">
+                  {n.label}
+                </text>
+              </g>
+            ))
+          }
+        </svg>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .belief__grid {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  @media (min-width: 62rem) {
+    .belief__grid {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      gap: var(--space-2xl);
+    }
+  }
+
+  .belief__rows {
+    margin-top: var(--space-xl);
+    border-top: 1px solid var(--line);
+  }
+
+  .belief__row {
+    display: grid;
+    grid-template-columns: minmax(8.5rem, 0.4fr) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 1.15rem;
+    border-bottom: 1px solid var(--line);
+    font-size: var(--step-1);
+    line-height: 1.4;
+  }
+
+  .belief__term {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--fg);
+  }
+
+  .belief__rest {
+    color: var(--fg-2);
+  }
+
+  @media (max-width: 36rem) {
+    .belief__row {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+
+  .belief__close {
+    margin-top: var(--space-l);
+  }
+
+  .cd {
+    max-width: 32rem;
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .cd svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .cd__edges line {
+    stroke: rgb(255 255 255 / 0.28);
+    stroke-width: 1;
+    stroke-dasharray: 2 8;
+    transition: opacity 1.2s var(--ease-out) 1s;
+  }
+
+  .cd.is-in .cd__edges line {
+    opacity: 0.35;
+  }
+
+  .cd__link {
+    stroke: var(--c);
+    stroke-width: 1.25;
+    stroke-opacity: 0.85;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1.4s var(--ease-out);
+    transition-delay: calc(var(--i) * 200ms + 300ms);
+  }
+
+  :global(html.reveal-ready) .cd:not(.is-in) .cd__link {
+    stroke-dashoffset: 1;
+  }
+
+  .cd__core {
+    fill: var(--blue);
+  }
+
+  .cd__core-glow {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: cd-breathe 5s ease-in-out infinite;
+  }
+
+  @keyframes cd-breathe {
+    50% {
+      transform: scale(1.12);
+      opacity: 0.8;
+    }
+  }
+
+  .cd__halo {
+    fill: var(--c);
+    opacity: 0.12;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      transform 0.5s var(--ease-out),
+      opacity 0.5s var(--ease-out);
+  }
+
+  .cd__ring {
+    stroke: var(--c);
+    stroke-opacity: 0.5;
+  }
+
+  .cd__dot {
+    fill: var(--c);
+  }
+
+  .cd__label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    fill: var(--fg-3);
+  }
+
+  .cd__label--core {
+    fill: var(--fg);
+  }
+
+  .belief__grid:has([data-node="strategy"]:hover) .cd__node[data-node="strategy"] .cd__halo,
+  .belief__grid:has([data-node="creativity"]:hover) .cd__node[data-node="creativity"] .cd__halo,
+  .belief__grid:has([data-node="media"]:hover) .cd__node[data-node="media"] .cd__halo {
+    transform: scale(1.7);
+    opacity: 0.28;
+  }
+</style>

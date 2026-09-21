@@ -1,0 +1,200 @@
+---
+import SectionLabel from "../SectionLabel.astro";
+import { steps, principles } from "../../data/home";
+---
+
+<section id="how" class="section section--rule how" aria-labelledby="how-title">
+  <div class="container">
+    <div class="split">
+      <SectionLabel num="04" text="How we work" />
+      <h2 id="how-title" class="h2" data-reveal>We don’t believe in one-size-fits-all marketing.</h2>
+    </div>
+
+    <ol role="list" class="steps" data-reveal>
+      {
+        steps.map((s, i) => (
+          <li class="step" style={`--i: ${i}`}>
+            <span class="step__marker" aria-hidden="true">
+              <span class="step__dot" />
+            </span>
+            <p class="mono step__num">Step {String(i + 1).padStart(2, "0")}</p>
+            <h3 class="step__title">{s.title}</h3>
+            <p class="body step__text">{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="principles">
+      <h3 class="mono principles__kicker">What you can hold us to</h3>
+      <ul role="list" class="principles__list">
+        {
+          principles.map(([a, b], i) => (
+            <li class="principle" data-reveal style={`--i: ${i}`}>
+              <span class="principle__a">{a}</span> <span class="principle__b">{b}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .steps {
+    position: relative;
+    display: grid;
+    gap: var(--space-xl);
+    margin-top: var(--space-2xl);
+    padding-left: 2.25rem;
+  }
+
+  .steps::before,
+  .steps::after {
+    content: "";
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: var(--line-strong);
+  }
+
+  .steps::after {
+    background: linear-gradient(180deg, var(--blue), var(--blue-bright));
+    transform-origin: top;
+    transition: transform 1.8s var(--ease-out) 0.2s;
+  }
+
+  :global(html.reveal-ready) .steps:not(.is-in)::after {
+    transform: scaleY(0);
+  }
+
+  @media (min-width: 48rem) {
+    .steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--grid-gap);
+      padding-left: 0;
+    }
+
+    .steps::before,
+    .steps::after {
+      left: 0.5rem;
+      right: 0;
+      top: 0.5rem;
+      bottom: auto;
+      width: auto;
+      height: 1px;
+    }
+
+    .steps::after {
+      background: linear-gradient(90deg, var(--blue), var(--blue-bright) 70%, transparent);
+      transform-origin: left;
+    }
+
+    :global(html.reveal-ready) .steps:not(.is-in)::after {
+      transform: scaleX(0);
+    }
+  }
+
+  .step {
+    position: relative;
+  }
+
+  .step__marker {
+    position: absolute;
+    left: -2.25rem;
+    top: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--bg);
+  }
+
+  @media (min-width: 48rem) {
+    .step__marker {
+      position: relative;
+      left: 0;
+    }
+  }
+
+  .step__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 0 10px var(--blue);
+    transition: transform 0.6s var(--ease-out);
+    transition-delay: calc(var(--i) * 450ms + 400ms);
+  }
+
+  :global(html.reveal-ready) .steps:not(.is-in) .step__dot {
+    transform: scale(0);
+  }
+
+  .step__num {
+    color: var(--fg-3);
+  }
+
+  @media (min-width: 48rem) {
+    .step__num {
+      margin-top: var(--space-l);
+    }
+  }
+
+  .step__title {
+    margin-top: 0.5rem;
+    font-size: var(--step-3);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .step__text {
+    margin-top: 0.85rem;
+    max-width: 34ch;
+  }
+
+  .principles {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--line);
+  }
+
+  .principles__kicker {
+    color: var(--fg-3);
+    font-weight: 450;
+  }
+
+  .principles__list {
+    display: grid;
+    gap: var(--space-l) var(--grid-gap);
+    margin-top: var(--space-l);
+  }
+
+  @media (min-width: 40rem) {
+    .principles__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 75rem) {
+    .principles__list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .principle {
+    font-size: var(--step-2);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .principle__b {
+    color: var(--fg-3);
+  }
+</style>

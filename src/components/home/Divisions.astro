@@ -1,0 +1,305 @@
+---
+import SectionLabel from "../SectionLabel.astro";
+import Icon from "../Icon.astro";
+import { divisions } from "../../data/divisions";
+
+const rings = [
+  { r: 118, dur: 48, delay: -14 },
+  { r: 190, dur: 74, delay: -46 },
+  { r: 262, dur: 104, delay: -22 },
+];
+---
+
+<section id="divisions" class="section section--rule divs" aria-labelledby="divs-title">
+  <div class="container">
+    <div class="split divs__head">
+      <SectionLabel num="02" text="What we do" />
+      <div>
+        <h2 id="divs-title" class="h2" data-reveal>Three areas of expertise. One connected team.</h2>
+        <p class="lead divs__lead" data-reveal style="--i: 1">
+          Start with the one you need, or bring all three together. Each division stands on its own — and gets
+          stronger with the other two.
+        </p>
+      </div>
+    </div>
+
+    <div class="divs__body" data-divisions>
+      <div class="divs__visual" aria-hidden="true">
+        <div class="divs__sticky">
+          <svg class="omap" viewBox="0 0 600 600" fill="none">
+            <defs>
+              <radialGradient id="omap-core">
+                <stop offset="0" stop-color="#3b7bff" stop-opacity="0.6"></stop>
+                <stop offset="0.4" stop-color="#3b7bff" stop-opacity="0.16"></stop>
+                <stop offset="1" stop-color="#3b7bff" stop-opacity="0"></stop>
+              </radialGradient>
+            </defs>
+
+            {
+              divisions.map((d, i) => (
+                <g
+                  class="omap__orbit"
+                  data-orbit={d.id}
+                  style={`--accent: ${d.accent}; --dur: ${rings[i].dur}s; --delay: ${rings[i].delay}s`}
+                >
+                  <circle class="omap__ring" cx="300" cy="300" r={rings[i].r} />
+                  <g class="omap__spin">
+                    <line class="omap__link" x1="300" y1="300" x2={300 + rings[i].r} y2="300" />
+                    <circle class="omap__glow" cx={300 + rings[i].r} cy="300" r="24" />
+                    <circle class="omap__planet" cx={300 + rings[i].r} cy="300" r="5.5" />
+                  </g>
+                  <text class="omap__label" x="300" y={300 - rings[i].r - 12} text-anchor="middle">
+                    {d.index} {d.verb.toUpperCase()}
+                  </text>
+                </g>
+              ))
+            }
+
+            <circle cx="300" cy="300" r="96" fill="url(#omap-core)"></circle>
+            <circle class="omap__core" cx="300" cy="300" r="11"></circle>
+          </svg>
+        </div>
+      </div>
+
+      <ol role="list" class="divs__list">
+        {
+          divisions.map((d) => (
+            <li class="dpanel" data-panel={d.id} style={`--accent: ${d.accent}`}>
+              <p class="mono dpanel__meta">
+                <span class="label__dot" aria-hidden="true" />
+                {d.index} — {d.headline}
+              </p>
+              <h3 class="dpanel__name">
+                {d.name}<span class="dot" style={`--dot: ${d.accent}`} />
+              </h3>
+              <p class="lead dpanel__summary">{d.summary}</p>
+
+              <dl class="dpanel__facts">
+                <div class="dpanel__fact">
+                  <dt class="mono">The problem</dt>
+                  <dd>{d.problem}</dd>
+                </div>
+                <div class="dpanel__fact">
+                  <dt class="mono">What we do</dt>
+                  <dd>
+                    <ul role="list" class="dpanel__caps">
+                      {d.capabilities.map((c) => (
+                        <li>{c}</li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+                <div class="dpanel__fact">
+                  <dt class="mono">What you get</dt>
+                  <dd>{d.outcome}</dd>
+                </div>
+              </dl>
+
+              <a href={d.href} class="link dpanel__link">
+                Explore {d.name}
+                <Icon name="arrow-right" class="link__icon link__icon--right" />
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script>
+  import "../../scripts/divisions";
+</script>
+
+<style>
+  .divs__lead {
+    margin-top: var(--space-m);
+  }
+
+  .divs__body {
+    display: grid;
+    margin-top: var(--space-2xl);
+  }
+
+  @media (min-width: 62rem) {
+    .divs__body {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--grid-gap);
+      margin-top: var(--space-xl);
+    }
+  }
+
+  .divs__visual {
+    display: none;
+  }
+
+  @media (min-width: 62rem) {
+    .divs__visual {
+      display: block;
+    }
+
+    .divs__sticky {
+      position: sticky;
+      top: calc(var(--header-h) + 1rem);
+      height: calc(100svh - var(--header-h) - 2rem);
+      display: grid;
+      place-items: center;
+    }
+  }
+
+  .omap {
+    width: min(100%, 34rem);
+    height: auto;
+    overflow: visible;
+  }
+
+  .omap__ring {
+    stroke: rgb(255 255 255 / 0.12);
+    stroke-width: 1;
+    transition:
+      stroke 0.7s var(--ease-out),
+      stroke-opacity 0.7s var(--ease-out);
+  }
+
+  .omap__spin {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation: omap-spin var(--dur) linear infinite;
+    animation-delay: var(--delay);
+  }
+
+  @keyframes omap-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .omap__link {
+    stroke: var(--accent);
+    stroke-opacity: 0;
+    transition: stroke-opacity 0.7s var(--ease-out);
+  }
+
+  .omap__glow {
+    fill: var(--accent);
+    opacity: 0.1;
+    transition: opacity 0.7s var(--ease-out);
+  }
+
+  .omap__planet {
+    fill: var(--accent);
+  }
+
+  .omap__label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    fill: var(--fg-3);
+    transition: fill 0.7s var(--ease-out);
+  }
+
+  .omap__core {
+    fill: var(--blue);
+  }
+
+  .omap__orbit.is-active .omap__ring {
+    stroke: var(--accent);
+    stroke-opacity: 0.75;
+  }
+
+  .omap__orbit.is-active .omap__link {
+    stroke-opacity: 0.4;
+  }
+
+  .omap__orbit.is-active .omap__glow {
+    opacity: 0.38;
+  }
+
+  .omap__orbit.is-active .omap__label {
+    fill: var(--fg);
+  }
+
+  .dpanel {
+    padding-block: var(--space-2xl);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 62rem) {
+    .dpanel {
+      min-height: 64svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+
+  .dpanel__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--fg-3);
+  }
+
+  .dpanel__name {
+    margin-top: var(--space-s);
+    font-size: var(--step-5);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .dpanel__summary {
+    margin-top: var(--space-m);
+  }
+
+  .dpanel__facts {
+    margin-top: var(--space-xl);
+    border-top: 1px solid var(--line);
+  }
+
+  .dpanel__fact {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dpanel__fact dt {
+    color: var(--fg-3);
+    padding-top: 0.2rem;
+  }
+
+  .dpanel__caps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.25rem;
+  }
+
+  .dpanel__caps li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .dpanel__caps li::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .dpanel__link {
+    margin-top: var(--space-l);
+    align-self: flex-start;
+    width: fit-content;
+  }
+
+  @media (max-width: 36rem) {
+    .dpanel__fact {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+  }
+</style>

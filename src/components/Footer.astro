@@ -1,0 +1,241 @@
+---
+import { site } from "../config/site";
+import { divisions } from "../data/divisions";
+import Icon from "./Icon.astro";
+
+const year = new Date().getFullYear();
+const socials = site.social.filter((s) => s.href);
+const words = [
+  { text: "Think", dot: "var(--think)" },
+  { text: "Create", dot: "var(--create)" },
+  { text: "Amplify", dot: "var(--amplify)" },
+];
+---
+
+<footer class="footer" data-hide-mcta>
+  <div class="container">
+    <div class="footer__top">
+      <p class="footer__tagline">
+        {
+          words.map((w) => (
+            <Fragment>
+              <span class="footer__word">
+                {w.text}
+                <span class="dot" style={`--dot: ${w.dot}`}>
+                  <span class="sr-only">.</span>
+                </span>
+              </span>{" "}
+            </Fragment>
+          ))
+        }
+      </p>
+      <a href="/contact/" class="btn btn--primary">
+        <span class="btn__dot" aria-hidden="true"></span>
+        Start a conversation
+      </a>
+    </div>
+
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="/" class="brand" aria-label="BlueDot — home">
+          <span class="brand__dot" aria-hidden="true"></span>
+          <span aria-hidden="true">BlueDot</span>
+        </a>
+        <p class="small muted">Marketing strategy, creative execution and media performance — under one roof.</p>
+      </div>
+
+      <nav class="footer__col" aria-label="Divisions">
+        <p class="mono footer__heading">Divisions</p>
+        <ul role="list">
+          {
+            divisions.map((d) => (
+              <li>
+                <a href={d.href} class="footer__link" style={`--accent: ${d.accent}`}>
+                  <span class="footer__dot" aria-hidden="true" />
+                  {d.name}
+                  <span class="muted">— {d.verb}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav class="footer__col" aria-label="Company">
+        <p class="mono footer__heading">BlueDot</p>
+        <ul role="list">
+          <li><a href="/#how" class="footer__link">How we work</a></li>
+          <li><a href="/#start" class="footer__link">Where to start</a></li>
+          <li><a href="/contact/" class="footer__link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <p class="mono footer__heading">Get in touch</p>
+        <ul role="list">
+          {
+            site.email && (
+              <li>
+                <a href={`mailto:${site.email}`} class="footer__link">
+                  {site.email}
+                </a>
+              </li>
+            )
+          }
+          {
+            socials.map((s) => (
+              <li>
+                <a href={s.href} class="footer__link" target="_blank" rel="noopener">
+                  {s.label}
+                  <Icon name="arrow-up-right" class="footer__ext" />
+                </a>
+              </li>
+            ))
+          }
+          <li><a href="/contact/" class="footer__link">Send us a message</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="small muted">© {year} BlueDot. All rights reserved.</p>
+      <a href="#main" class="small footer__link footer__totop">Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    border-top: 1px solid var(--line);
+    padding-top: var(--section);
+    overflow: hidden;
+  }
+
+  .footer::before {
+    content: "";
+    position: absolute;
+    inset: auto -20% -60% -20%;
+    height: 90%;
+    background: radial-gradient(50% 50% at 50% 100%, rgb(59 123 255 / 0.14), transparent 70%);
+    pointer-events: none;
+  }
+
+  .footer__top {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-l);
+    padding-bottom: var(--space-2xl);
+  }
+
+  .footer__tagline {
+    font-size: var(--step-5);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+  }
+
+  .footer__word {
+    white-space: nowrap;
+  }
+
+  .footer__grid {
+    position: relative;
+    display: grid;
+    gap: var(--space-xl) var(--grid-gap);
+    padding-block: var(--space-xl);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 40rem) {
+    .footer__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 62rem) {
+    .footer__grid {
+      grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .footer__brand {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+    max-width: 22rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: fit-content;
+    min-height: 44px;
+    font-size: 1.125rem;
+    font-weight: 560;
+    letter-spacing: -0.025em;
+  }
+
+  .brand__dot {
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 36% 34%, #dfe8ff 0%, var(--blue) 45%, #1c4ccc 100%);
+    box-shadow: 0 0 16px rgb(59 123 255 / 0.75);
+  }
+
+  .footer__heading {
+    color: var(--fg-3);
+    margin-bottom: var(--space-s);
+  }
+
+  .footer__col ul {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .footer__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.5rem;
+    color: var(--fg-2);
+    transition: color var(--dur) var(--ease-out);
+  }
+
+  .footer__link:hover {
+    color: var(--fg);
+  }
+
+  .footer__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .footer__link :global(.footer__ext) {
+    width: 0.9em;
+    height: 0.9em;
+  }
+
+  .footer__bottom {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-block: var(--space-m) calc(var(--space-l) + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 47.99rem) {
+    .footer__bottom {
+      padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+    }
+  }
+</style>

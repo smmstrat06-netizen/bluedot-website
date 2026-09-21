@@ -1,0 +1,84 @@
+---
+import SectionLabel from "./SectionLabel.astro";
+
+interface Props {
+  num: string;
+  title: string;
+  text: string;
+  fit: string[];
+}
+
+const { num, title, text, fit } = Astro.props;
+---
+
+<section class="section" aria-labelledby="positioning-title">
+  <div class="container split">
+    <SectionLabel num={num} text="Positioning" />
+    <div>
+      <h2 id="positioning-title" class="h2 pos__title" data-reveal>{title}</h2>
+      <div class="pos__grid">
+        <p class="lead pos__text" data-reveal style="--i: 1">{text}</p>
+        <div data-reveal style="--i: 2">
+          <h3 class="mono pos__kicker">Right for you if</h3>
+          <ul role="list" class="pos__list">
+            {
+              fit.map((item) => (
+                <li>
+                  <span class="pos__dot" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pos__title {
+    max-width: 20ch;
+  }
+
+  .pos__grid {
+    display: grid;
+    gap: var(--space-xl);
+    margin-top: var(--space-xl);
+  }
+
+  @media (min-width: 62rem) {
+    .pos__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2xl);
+    }
+  }
+
+  .pos__kicker {
+    color: var(--fg-3);
+    font-weight: 450;
+  }
+
+  .pos__list {
+    margin-top: var(--space-s);
+    border-top: 1px solid var(--line);
+  }
+
+  .pos__list li {
+    display: grid;
+    grid-template-columns: 1.25rem minmax(0, 1fr);
+    gap: 0.5rem;
+    padding-block: 0.9rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--fg);
+  }
+
+  .pos__dot {
+    width: 6px;
+    height: 6px;
+    margin-top: 0.62em;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+</style>

@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CosmosCanvas from "../components/CosmosCanvas.astro";
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you’re looking for doesn’t exist."
+  noindex
+  mobileCta={false}
+>
+  <section class="nf" aria-labelledby="nf-title">
+    <CosmosCanvas scene="system" cx={0.5} cy={0.42} scale={0.3} />
+    <div class="nf__shade" aria-hidden="true"></div>
+    <div class="container nf__inner">
+      <p class="label">
+        <span class="label__dot" aria-hidden="true"></span>
+        <span class="label__num">404</span>
+        <span>Off the map</span>
+      </p>
+      <h1 id="nf-title" class="h1 nf__title">This dot isn’t on the map<span class="dot"><span class="sr-only">.</span></span></h1>
+      <p class="lead nf__lead">The page you’re looking for has moved or never existed. Let’s get you back on course.</p>
+      <div class="nf__actions">
+        <a href="/" class="btn btn--primary"><span class="btn__dot" aria-hidden="true"></span>Back to home</a>
+        <a href="/contact/" class="btn btn--ghost">Contact us</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    min-height: 100svh;
+    padding-block: calc(var(--header-h) + var(--space-2xl)) var(--space-3xl);
+    overflow: hidden;
+  }
+
+  .nf :global(.cosmos) {
+    z-index: -2;
+  }
+
+  .nf__shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(0deg, var(--bg) 25%, rgb(5 7 13 / 0.2) 70%);
+  }
+
+  .nf__title {
+    margin-top: var(--space-m);
+  }
+
+  .nf__lead {
+    margin-top: var(--space-m);
+  }
+
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: var(--space-l);
+  }
+</style>
