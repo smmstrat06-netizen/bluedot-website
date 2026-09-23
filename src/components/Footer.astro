@@ -38,8 +38,7 @@ const words = [
     <div class="footer__grid">
       <div class="footer__brand">
         <a href="/" class="brand" aria-label="BlueDot — home">
-          <span class="brand__dot" aria-hidden="true"></span>
-          <span aria-hidden="true">BlueDot</span>
+          <img src="/brand-assets/logo.png" alt="Bluedot" class="brand__logo" width="140" height="40" />
         </a>
         <p class="small muted">Marketing strategy, creative execution and media performance — under one roof.</p>
       </div>
@@ -117,7 +116,7 @@ const words = [
     position: absolute;
     inset: auto -20% -60% -20%;
     height: 90%;
-    background: radial-gradient(50% 50% at 50% 100%, rgb(59 123 255 / 0.14), transparent 70%);
+    background: radial-gradient(50% 50% at 50% 100%, rgb(7 122 231 / 0.18), transparent 70%);
     pointer-events: none;
   }
 
@@ -132,6 +131,9 @@ const words = [
   }
 
   .footer__tagline {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: #ffffff;
     font-size: var(--step-5);
     line-height: 0.95;
     letter-spacing: -0.045em;
@@ -171,20 +173,15 @@ const words = [
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
     width: fit-content;
     min-height: 44px;
-    font-size: 1.125rem;
-    font-weight: 560;
-    letter-spacing: -0.025em;
   }
 
-  .brand__dot {
-    width: 0.72rem;
-    height: 0.72rem;
-    border-radius: 50%;
-    background: radial-gradient(circle at 36% 34%, #dfe8ff 0%, var(--blue) 45%, #1c4ccc 100%);
-    box-shadow: 0 0 16px rgb(59 123 255 / 0.75);
+  .brand__logo {
+    height: 36px;
+    width: auto;
+    display: block;
+    object-fit: contain;
   }
 
   .footer__heading {

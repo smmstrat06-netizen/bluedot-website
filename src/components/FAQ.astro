@@ -56,7 +56,31 @@ const { num, items, title = "Good to know before we talk." } = Astro.props;
   }
 
   .faq__item {
+    position: relative;
     border-bottom: 1px solid var(--line);
+    transition: background-color 0.3s var(--ease-out);
+  }
+
+  /* Left accent line indicator when open */
+  .faq__item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--blue);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  .faq__item[open]::before {
+    transform: scaleY(1);
+  }
+
+  .faq__item[open] {
+    background: linear-gradient(90deg, rgba(7, 122, 231, 0.05) 0%, transparent 65%);
   }
 
   .faq__q {
@@ -64,12 +88,16 @@ const { num, items, title = "Good to know before we talk." } = Astro.props;
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
-    min-height: 3.5rem;
-    padding-block: 1.1rem;
+    min-height: 3.75rem;
+    padding: 1.2rem 0.75rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: #ffffff;
     font-size: var(--step-1);
     line-height: 1.35;
     cursor: pointer;
     list-style: none;
+    transition: color 0.25s var(--ease-out);
   }
 
   .faq__q::-webkit-details-marker {
@@ -82,12 +110,15 @@ const { num, items, title = "Good to know before we talk." } = Astro.props;
     place-items: center;
     width: 2.25rem;
     height: 2.25rem;
-    border: 1px solid var(--line-strong);
+    border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
     transition:
-      transform 0.4s var(--ease-out),
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
       border-color var(--dur) var(--ease-out),
-      background-color var(--dur) var(--ease-out);
+      background-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
   }
 
   .faq__icon :global(svg) {
@@ -96,18 +127,25 @@ const { num, items, title = "Good to know before we talk." } = Astro.props;
   }
 
   .faq__q:hover .faq__icon {
-    border-color: var(--fg);
+    border-color: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .faq__item[open] .faq__icon {
     transform: rotate(45deg);
-    background: var(--fg);
-    border-color: var(--fg);
-    color: var(--bg);
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(7, 122, 231, 0.45);
   }
 
   .faq__a {
-    padding: 0 3.5rem 1.4rem 0;
+    padding: 0 3.5rem 1.6rem 0.75rem;
+  }
+
+  .faq__a p {
+    line-height: 1.65;
+    color: var(--fg-2);
   }
 
   .faq__item::details-content {

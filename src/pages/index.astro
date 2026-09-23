@@ -27,7 +27,7 @@ const base = Astro.site!;
   <SituationPicker />
   <HowWeWork />
 
-  <section class="section section--rule" aria-labelledby="pov-title">
+  <section class="section section--rule pov-section" aria-labelledby="pov-title">
     <div class="container split">
       <SectionLabel num="05" text="Point of view" />
       <div class="pov">
@@ -52,6 +52,25 @@ const base = Astro.site!;
 </BaseLayout>
 
 <style>
+  .pov-section {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 800px 500px at 80% 50%, rgba(7, 122, 231, 0.07), transparent 70%),
+      radial-gradient(ellipse 500px 400px at 20% 30%, rgba(186, 109, 255, 0.03), transparent 60%);
+  }
+
+  .pov-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(7, 122, 231, 0.25) 20%, rgba(255, 255, 255, 0.12) 50%, rgba(234, 109, 32, 0.2) 80%, transparent);
+    pointer-events: none;
+  }
+
   .pov {
     display: grid;
     gap: var(--space-2xl);
@@ -66,9 +85,30 @@ const base = Astro.site!;
 
   .pov__lead {
     margin-top: var(--space-m);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.85);
   }
 
   .pov__link {
     margin-top: var(--space-l);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+  }
+
+  .pov__link :global(.link__icon) {
+    transition: transform 0.25s var(--ease-out);
+  }
+
+  .pov__link:hover :global(.link__icon) {
+    transform: translateX(4px);
+  }
+
+  .pov :global(.surface) {
+    border-color: rgba(7, 122, 231, 0.25);
+    box-shadow:
+      0 24px 48px -18px rgba(0, 0, 0, 0.7),
+      0 0 35px -10px rgba(7, 122, 231, 0.2);
   }
 </style>

@@ -56,9 +56,13 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
     --pad: clamp(1.25rem, 0.9rem + 1.8vw, 2.25rem);
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--line);
+    border: 1px solid rgba(7, 122, 231, 0.22);
     border-radius: var(--radius-m);
-    background: linear-gradient(180deg, var(--bg-raise) 0%, #07102a 58%, #050a1c 100%);
+    background: linear-gradient(180deg, rgba(8, 12, 24, 0.92) 0%, rgba(5, 10, 28, 0.96) 58%, rgba(2, 5, 16, 0.99) 100%);
+    box-shadow:
+      0 24px 48px -18px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 0 35px -12px rgba(7, 122, 231, 0.2);
   }
 
   .surface__above {
@@ -68,12 +72,19 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
   }
 
   .surface__zone {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--fg-3);
   }
 
   .surface__zone--below {
     padding: 1.25rem var(--pad) 0.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--blue-bright);
+    font-weight: 600;
   }
 
   .surface__top {
@@ -84,6 +95,9 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
   }
 
   .surface__top-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: #ffffff;
     font-size: var(--step-3);
     line-height: 1;
     letter-spacing: -0.035em;
@@ -103,7 +117,7 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
     content: "";
     position: absolute;
     inset: 14px 0 0;
-    background: linear-gradient(180deg, rgb(59 123 255 / 0.12), transparent);
+    background: linear-gradient(180deg, rgb(7 122 231 / 0.22), transparent);
   }
 
   .surface__water svg {
@@ -116,8 +130,9 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
   .surface__water path {
     fill: none;
     stroke: var(--blue-bright);
-    stroke-opacity: 0.6;
-    stroke-width: 1.2;
+    stroke-opacity: 0.75;
+    stroke-width: 1.25;
+    filter: drop-shadow(0 0 4px rgba(7, 122, 231, 0.45));
     vector-effect: non-scaling-stroke;
   }
 
@@ -132,18 +147,20 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
     grid-template-columns: 3.25rem minmax(9rem, 0.45fr) minmax(0, 1fr);
     gap: 0.5rem 1rem;
     align-items: baseline;
-    padding: 1.05rem var(--pad);
-    border-top: 1px solid rgb(122 165 255 / 0.1);
-    background: rgb(59 123 255 / calc(0.015 + var(--d) * 0.02));
+    padding: 1.1rem var(--pad);
+    border-top: 1px solid rgba(7, 122, 231, 0.14);
+    background: rgb(7 122 231 / calc(0.018 + var(--d) * 0.022));
     transition:
       background-color var(--dur) var(--ease-out),
+      padding-left var(--dur) var(--ease-out),
       opacity 0.8s var(--ease-out),
       transform 0.8s var(--ease-out);
-    transition-delay: 0s, calc(var(--d) * 110ms + 250ms), calc(var(--d) * 110ms + 250ms);
+    transition-delay: 0s, 0s, calc(var(--d) * 110ms + 250ms), calc(var(--d) * 110ms + 250ms);
   }
 
   .surface__layer:hover {
-    background: rgb(59 123 255 / calc(0.07 + var(--d) * 0.02));
+    background: rgb(7 122 231 / calc(0.08 + var(--d) * 0.025));
+    padding-left: calc(var(--pad) + 4px);
   }
 
   :global(html.reveal-ready) .surface:not(.is-in) .surface__layer {
@@ -153,15 +170,21 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
 
   .surface__depth {
     color: var(--blue-bright);
+    font-weight: 600;
+    letter-spacing: 0.08em;
   }
 
   .surface__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: #ffffff;
     font-size: var(--step-1);
     line-height: 1.3;
   }
 
   .surface__q {
     color: var(--fg-2);
+    line-height: 1.5;
   }
 
   @media (max-width: 48rem) {
@@ -176,6 +199,6 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
 
   .surface--compact .surface__layer {
     grid-template-columns: 3.25rem minmax(0, 1fr);
-    padding-block: 0.8rem;
+    padding-block: 0.85rem;
   }
 </style>

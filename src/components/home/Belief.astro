@@ -48,10 +48,24 @@ const nodes = [
         <svg viewBox="0 0 520 470" fill="none">
           <defs>
             <radialGradient id="cd-core-glow">
-              <stop offset="0" stop-color="#3b7bff" stop-opacity="0.55"></stop>
-              <stop offset="1" stop-color="#3b7bff" stop-opacity="0"></stop>
+              <stop offset="0%" stop-color="#077AE7" stop-opacity="0.7"></stop>
+              <stop offset="45%" stop-color="#077AE7" stop-opacity="0.25"></stop>
+              <stop offset="100%" stop-color="#077AE7" stop-opacity="0"></stop>
+            </radialGradient>
+            <radialGradient id="cd-ambient-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#077AE7" stop-opacity="0.15"></stop>
+              <stop offset="100%" stop-color="#077AE7" stop-opacity="0"></stop>
             </radialGradient>
           </defs>
+
+          <!-- Architectural construction ring & ambient glow -->
+          <circle cx={core.x} cy={core.y} r="210" fill="url(#cd-ambient-glow)"></circle>
+          <circle cx={core.x} cy={core.y} r="195" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 8" fill="none"></circle>
+          <circle cx={core.x} cy={core.y} r="115" stroke="rgba(7, 122, 231, 0.12)" stroke-dasharray="3 6" fill="none"></circle>
+
+          <!-- Technical reticle ticks -->
+          <line x1={core.x - 14} y1={core.y} x2={core.x + 14} y2={core.y} stroke="rgba(255,255,255,0.18)" stroke-width="0.8"></line>
+          <line x1={core.x} y1={core.y - 14} x2={core.x} y2={core.y + 14} stroke="rgba(255,255,255,0.18)" stroke-width="0.8"></line>
 
           <g class="cd__edges">
             <line x1={nodes[0].x} y1={nodes[0].y} x2={nodes[1].x} y2={nodes[1].y}></line>
@@ -63,6 +77,7 @@ const nodes = [
             nodes.map((n, i) => (
               <line
                 class="cd__link"
+                data-link={n.id}
                 pathLength="1"
                 x1={n.x}
                 y1={n.y}
@@ -74,13 +89,14 @@ const nodes = [
           }
 
           <circle class="cd__core-glow" cx={core.x} cy={core.y} r="96" fill="url(#cd-core-glow)"></circle>
+          <circle class="cd__core-pulse" cx={core.x} cy={core.y} r="24"></circle>
           <circle class="cd__core" cx={core.x} cy={core.y} r="10"></circle>
-          <text class="cd__label cd__label--core" x={core.x} y={core.y + 42} text-anchor="middle">BLUEDOT</text>
+          <text class="cd__label cd__label--core" x={core.x} y={core.y + 38} text-anchor="middle">BLUEDOT</text>
 
           {
             nodes.map((n) => (
               <g class="cd__node" data-node={n.id} style={`--c: ${n.color}`}>
-                <circle class="cd__halo" cx={n.x} cy={n.y} r="24" />
+                <circle class="cd__halo" cx={n.x} cy={n.y} r="26" />
                 <circle class="cd__ring" cx={n.x} cy={n.y} r="13" />
                 <circle class="cd__dot" cx={n.x} cy={n.y} r="5" />
                 <text class="cd__label" x={n.x} y={n.ly} text-anchor="middle">
@@ -96,6 +112,25 @@ const nodes = [
 </section>
 
 <style>
+  .belief {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 700px 500px at 85% 50%, rgba(7, 122, 231, 0.08), transparent 70%),
+      radial-gradient(ellipse 500px 400px at 15% 25%, rgba(234, 109, 32, 0.035), transparent 60%);
+  }
+
+  .belief::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(7, 122, 231, 0.35) 25%, rgba(255, 255, 255, 0.15) 50%, rgba(234, 109, 32, 0.25) 75%, transparent);
+    pointer-events: none;
+  }
+
   .belief__grid {
     display: grid;
     gap: var(--space-2xl);
@@ -115,14 +150,51 @@ const nodes = [
   }
 
   .belief__row {
+    position: relative;
     display: grid;
     grid-template-columns: minmax(8.5rem, 0.4fr) minmax(0, 1fr);
     gap: 1rem;
     align-items: baseline;
-    padding-block: 1.15rem;
+    padding: 1.2rem 1rem 1.2rem 1.15rem;
     border-bottom: 1px solid var(--line);
     font-size: var(--step-1);
     line-height: 1.4;
+    border-radius: var(--radius-s);
+    transition:
+      background-color 0.25s var(--ease-out),
+      transform 0.25s var(--ease-out),
+      border-color 0.25s var(--ease-out);
+    cursor: default;
+  }
+
+  /* Precision left accent indicator */
+  .belief__row::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 15%;
+    bottom: 15%;
+    width: 2.5px;
+    background: var(--accent);
+    border-radius: 2px;
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  .belief__row:hover,
+  .belief__grid:has(.cd__node[data-node="strategy"]:hover) .belief__row[data-node="strategy"],
+  .belief__grid:has(.cd__node[data-node="creativity"]:hover) .belief__row[data-node="creativity"],
+  .belief__grid:has(.cd__node[data-node="media"]:hover) .belief__row[data-node="media"] {
+    background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 8%, transparent), transparent 85%);
+    transform: translateX(4px);
+  }
+
+  .belief__row:hover::before,
+  .belief__grid:has(.cd__node[data-node="strategy"]:hover) .belief__row[data-node="strategy"]::before,
+  .belief__grid:has(.cd__node[data-node="creativity"]:hover) .belief__row[data-node="creativity"]::before,
+  .belief__grid:has(.cd__node[data-node="media"]:hover) .belief__row[data-node="media"]::before {
+    transform: scaleY(1);
   }
 
   .belief__term {
@@ -130,27 +202,64 @@ const nodes = [
     align-items: center;
     gap: 0.7rem;
     color: var(--fg);
+    font-weight: 500;
+  }
+
+  .belief__row .label__dot {
+    transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  }
+
+  .belief__row:hover .label__dot,
+  .belief__grid:has(.cd__node[data-node="strategy"]:hover) .belief__row[data-node="strategy"] .label__dot,
+  .belief__grid:has(.cd__node[data-node="creativity"]:hover) .belief__row[data-node="creativity"] .label__dot,
+  .belief__grid:has(.cd__node[data-node="media"]:hover) .belief__row[data-node="media"] .label__dot {
+    transform: scale(1.35);
+    box-shadow: 0 0 10px var(--accent);
   }
 
   .belief__rest {
     color: var(--fg-2);
+    transition: color 0.25s var(--ease-out);
+  }
+
+  .belief__row:hover .belief__rest {
+    color: #ffffff;
   }
 
   @media (max-width: 36rem) {
     .belief__row {
       grid-template-columns: 1fr;
       gap: 0.2rem;
+      padding-inline: 0.5rem;
+    }
+
+    .belief__row:hover {
+      transform: none;
     }
   }
 
   .belief__close {
     margin-top: var(--space-l);
+    color: var(--fg-2);
+    line-height: 1.65;
   }
 
   .cd {
+    position: relative;
     max-width: 32rem;
     margin-inline: auto;
     width: 100%;
+    padding: clamp(1rem, 0.8rem + 1.2vw, 2rem);
+    border-radius: var(--radius-l);
+    background:
+      radial-gradient(circle at 50% 60%, rgba(7, 122, 231, 0.1) 0%, transparent 70%),
+      rgba(8, 11, 22, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 24px 48px -18px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
   }
 
   .cd svg {
@@ -160,23 +269,27 @@ const nodes = [
   }
 
   .cd__edges line {
-    stroke: rgb(255 255 255 / 0.28);
+    stroke: rgb(255 255 255 / 0.2);
     stroke-width: 1;
-    stroke-dasharray: 2 8;
+    stroke-dasharray: 3 8;
     transition: opacity 1.2s var(--ease-out) 1s;
   }
 
   .cd.is-in .cd__edges line {
-    opacity: 0.35;
+    opacity: 0.45;
   }
 
   .cd__link {
     stroke: var(--c);
-    stroke-width: 1.25;
-    stroke-opacity: 0.85;
+    stroke-width: 1.5;
+    stroke-opacity: 0.7;
     stroke-dasharray: 1;
     stroke-dashoffset: 0;
-    transition: stroke-dashoffset 1.4s var(--ease-out);
+    transition:
+      stroke-dashoffset 1.4s var(--ease-out),
+      stroke-width 0.4s var(--ease-out),
+      stroke-opacity 0.4s var(--ease-out),
+      filter 0.4s var(--ease-out);
     transition-delay: calc(var(--i) * 200ms + 300ms);
   }
 
@@ -185,7 +298,26 @@ const nodes = [
   }
 
   .cd__core {
-    fill: var(--blue);
+    fill: var(--blue-sky);
+    filter: drop-shadow(0 0 10px #077AE7);
+  }
+
+  .cd__core-pulse {
+    fill: rgba(7, 122, 231, 0.16);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: cd-pulse 3.5s ease-in-out infinite;
+  }
+
+  @keyframes cd-pulse {
+    0%, 100% {
+      transform: scale(0.92);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 0.85;
+    }
   }
 
   .cd__core-glow {
@@ -196,9 +328,14 @@ const nodes = [
 
   @keyframes cd-breathe {
     50% {
-      transform: scale(1.12);
-      opacity: 0.8;
+      transform: scale(1.15);
+      opacity: 0.85;
     }
+  }
+
+  .cd__node {
+    cursor: pointer;
+    transition: opacity 0.4s var(--ease-out);
   }
 
   .cd__halo {
@@ -213,28 +350,66 @@ const nodes = [
 
   .cd__ring {
     stroke: var(--c);
-    stroke-opacity: 0.5;
+    stroke-opacity: 0.6;
+    stroke-width: 1.25;
+    transition:
+      stroke-opacity 0.4s var(--ease-out),
+      stroke-width 0.4s var(--ease-out),
+      filter 0.4s var(--ease-out);
   }
 
   .cd__dot {
     fill: var(--c);
+    filter: drop-shadow(0 0 5px var(--c));
   }
 
   .cd__label {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 500;
     letter-spacing: 0.16em;
     fill: var(--fg-3);
+    transition: fill 0.3s var(--ease-out), font-weight 0.3s var(--ease-out);
   }
 
   .cd__label--core {
-    fill: var(--fg);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    fill: #ffffff;
   }
 
+  /* ── Interactive Bidirectional Highlighting ── */
   .belief__grid:has([data-node="strategy"]:hover) .cd__node[data-node="strategy"] .cd__halo,
   .belief__grid:has([data-node="creativity"]:hover) .cd__node[data-node="creativity"] .cd__halo,
-  .belief__grid:has([data-node="media"]:hover) .cd__node[data-node="media"] .cd__halo {
-    transform: scale(1.7);
-    opacity: 0.28;
+  .belief__grid:has([data-node="media"]:hover) .cd__node[data-node="media"] .cd__halo,
+  .cd__node:hover .cd__halo {
+    transform: scale(1.85);
+    opacity: 0.4;
+  }
+
+  .belief__grid:has([data-node="strategy"]:hover) .cd__node[data-node="strategy"] .cd__ring,
+  .belief__grid:has([data-node="creativity"]:hover) .cd__node[data-node="creativity"] .cd__ring,
+  .belief__grid:has([data-node="media"]:hover) .cd__node[data-node="media"] .cd__ring,
+  .cd__node:hover .cd__ring {
+    stroke-opacity: 1;
+    stroke-width: 1.8;
+    filter: drop-shadow(0 0 8px var(--c));
+  }
+
+  .belief__grid:has([data-node="strategy"]:hover) .cd__node[data-node="strategy"] .cd__label,
+  .belief__grid:has([data-node="creativity"]:hover) .cd__node[data-node="creativity"] .cd__label,
+  .belief__grid:has([data-node="media"]:hover) .cd__node[data-node="media"] .cd__label,
+  .cd__node:hover .cd__label {
+    fill: #ffffff;
+    font-weight: 700;
+  }
+
+  .belief__grid:has([data-node="strategy"]:hover) .cd__link[data-link="strategy"],
+  .belief__grid:has([data-node="creativity"]:hover) .cd__link[data-link="creativity"],
+  .belief__grid:has([data-node="media"]:hover) .cd__link[data-link="media"] {
+    stroke-width: 2.5;
+    stroke-opacity: 1;
+    filter: drop-shadow(0 0 6px var(--c));
   }
 </style>

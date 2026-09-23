@@ -74,19 +74,23 @@ import Icon from "./Icon.astro";
     justify-content: space-between;
     gap: 1rem;
     padding: 0.5rem 0.5rem 0.5rem 1.1rem;
-    border: 1px solid var(--line-strong);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-pill);
-    background: rgb(17 23 35 / 0.9);
-    -webkit-backdrop-filter: blur(16px);
-    backdrop-filter: blur(16px);
-    box-shadow: 0 20px 50px -20px rgb(0 0 0 / 0.9);
+    background: rgba(8, 10, 18, 0.88);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    box-shadow:
+      0 20px 50px -20px rgb(0 0 0 / 0.9),
+      0 0 24px -6px rgb(7 122 231 / 0.2);
   }
 
   .mcta__title {
     display: block;
+    font-family: var(--font-display);
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.25;
+    color: #fff;
   }
 
   .mcta__sub {
@@ -103,11 +107,18 @@ import Icon from "./Icon.astro";
     min-height: 2.75rem;
     padding-inline: 1rem;
     border-radius: var(--radius-pill);
-    background: var(--fg);
-    color: var(--bg);
+    background: var(--blue);
+    color: #fff;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     white-space: nowrap;
+    box-shadow: 0 0 16px rgb(7 122 231 / 0.4);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .mcta__inner:hover .mcta__btn {
+    background: var(--blue-bright);
+    transform: scale(1.02);
   }
 
   .mcta__btn :global(.mcta__icon) {

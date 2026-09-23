@@ -97,9 +97,17 @@ const { num, title, lead, services, group } = Astro.props;
   }
 
   .service__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: #ffffff;
     font-size: var(--step-3);
     line-height: 1.1;
     letter-spacing: -0.03em;
+    transition: color var(--dur) var(--ease-out);
+  }
+
+  .service__summary:hover .service__title {
+    color: var(--accent);
   }
 
   .service__short {

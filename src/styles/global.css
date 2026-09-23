@@ -1,73 +1,111 @@
 /* ==========================================================================
-   BlueDot design system
+   BlueDot design system — Brand Kit aligned
    Tokens → base → layout → typography → components → motion
    ========================================================================== */
+
+/* Space Grotesk — closest available match to Creato Display */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 :root {
   color-scheme: dark;
 
-  /* Surfaces — deep space, never pure black */
-  --bg: #05070d;
-  --bg-raise: #0a0e17;
-  --bg-raise-2: #111723;
-  --line: rgb(255 255 255 / 0.08);
-  --line-strong: rgb(255 255 255 / 0.16);
+  /* ── Brand color system ─────────────────────────────────────────────────── */
+  /* Backgrounds — true deep-space blacks */
+  --bg:         #050508;
+  --bg-raise:   #0a0a10;
+  --bg-raise-2: #12121a;
+  --line:       rgb(255 255 255 / 0.09);
+  --line-strong:rgb(255 255 255 / 0.18);
 
-  /* Text — all pairs checked ≥ 4.5:1 on --bg */
-  --fg: #f2f4f8;
-  --fg-2: #aeb6c6;
-  --fg-3: #818b9f;
+  /* Text */
+  --fg:   #f5f5f7;
+  --fg-2: #a8aab8;
+  --fg-3: #5a5c6e;
 
-  /* Brand: the blue dot, plus one hue per division */
-  --blue: #3b7bff;
-  --blue-bright: #7aa5ff;
-  --think: #ff7a59;
-  --create: #3fd6e6;
-  --amplify: #ffc247;
+  /* Brand blues — from Brand Kit */
+  --blue-sky:      #077AE7;
+  --blue-deep:     #0044FF;
+  --blue-absolute: #0000FF;
+  --blue:          #077AE7;          /* primary interactive blue */
+  --blue-bright:   #5aa8ff;
+
+  /* Brand purples */
+  --violet:   #BBBCF8;
+  --flower:   #BA6DFF;
+  --mist:     #8557A3;
+
+  /* Brand darks */
+  --shadow:   #131313;
+  --night:    #000047;
+  --void:     #000000;
+
+  /* Brand lights */
+  --daylight:  #71B5EB;
+  --soft-pink: #F4DDFF;
+
+  /* Accent palette */
+  --orange:  #FF6200;
+  --yellow:  #FFFF00;
+  --teal:    #018A7B;
+  --mint:    #82FB91;
+
+  /* Division accents — matched to brand presentations */
+  --think:   #FF6200;          /* Consulting — orange/mars */
+  --create:  #077AE7;          /* Agency — electric blue/earth */
+  --amplify: #FF6200;          /* Media — orange glow/black-hole */
+
   --positive: #52e3a0;
   --negative: #ff6b6b;
-  --accent: var(--blue);
+  --accent:   var(--blue);
 
-  /* Type */
-  --font-sans: "Host Grotesk Variable", "Host Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  /* ── Typography ─────────────────────────────────────────────────────────── */
+  --font-display: 'Space Grotesk', 'Host Grotesk Variable', 'Host Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-sans:    'Space Grotesk', 'Host Grotesk Variable', 'Host Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:    'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
-  --step--1: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
-  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
-  --step-1: clamp(1.125rem, 1.06rem + 0.3vw, 1.3125rem);
-  --step-2: clamp(1.375rem, 1.24rem + 0.6vw, 1.75rem);
-  --step-3: clamp(1.625rem, 1.38rem + 1.1vw, 2.375rem);
-  --step-4: clamp(2.125rem, 1.6rem + 2.3vw, 3.75rem);
-  --step-5: clamp(2.625rem, 1.75rem + 4vw, 5.5rem);
-  --step-6: clamp(3.25rem, 1.6rem + 7.2vw, 8.75rem);
+  /* Fluid type scale */
+  --step--1: clamp(0.8125rem, 0.79rem + 0.1vw,  0.875rem);
+  --step-0:  clamp(1rem,      0.97rem + 0.15vw, 1.0625rem);
+  --step-1:  clamp(1.125rem,  1.06rem + 0.3vw,  1.3125rem);
+  --step-2:  clamp(1.375rem,  1.24rem + 0.6vw,  1.75rem);
+  --step-3:  clamp(1.625rem,  1.38rem + 1.1vw,  2.375rem);
+  --step-4:  clamp(2.125rem,  1.6rem  + 2.3vw,  3.75rem);
+  --step-5:  clamp(2.625rem,  1.75rem + 4vw,    5.5rem);
+  --step-6:  clamp(3.25rem,   1.6rem  + 7.2vw,  8.75rem);
+  --step-7:  clamp(4rem,      1.4rem  + 10vw,   12rem);
 
-  /* Space */
+  /* ── Space ──────────────────────────────────────────────────────────────── */
   --space-3xs: 0.25rem;
   --space-2xs: 0.5rem;
-  --space-xs: 0.75rem;
-  --space-s: 1rem;
-  --space-m: 1.5rem;
-  --space-l: 2rem;
-  --space-xl: 3rem;
+  --space-xs:  0.75rem;
+  --space-s:   1rem;
+  --space-m:   1.5rem;
+  --space-l:   2rem;
+  --space-xl:  3rem;
   --space-2xl: 4.5rem;
   --space-3xl: 6.5rem;
-  --section: clamp(5rem, 2.5rem + 8vw, 10rem);
-  --gutter: clamp(1.25rem, 0.7rem + 2.4vw, 3rem);
-  --grid-gap: clamp(1rem, 0.4rem + 1.8vw, 2rem);
-  --max: 92rem;
-  --header-h: 4.5rem;
+  --section:   clamp(5rem, 2.5rem + 8vw, 10rem);
+  --gutter:    clamp(1.25rem, 0.7rem + 2.4vw, 3rem);
+  --grid-gap:  clamp(1rem, 0.4rem + 1.8vw, 2rem);
+  --max:       92rem;
+  --header-h:  5rem;
 
-  /* Shape */
-  --radius-s: 6px;
-  --radius-m: 14px;
+  /* ── Shape ──────────────────────────────────────────────────────────────── */
+  --radius-s:    6px;
+  --radius-m:    16px;
+  --radius-l:    28px;
   --radius-pill: 999px;
 
-  /* Motion */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* ── Shadows / Glows ────────────────────────────────────────────────────── */
+  --glow-blue:   0 0 60px rgb(7 122 231 / 0.45), 0 0 20px rgb(7 122 231 / 0.25);
+  --glow-purple: 0 0 60px rgb(186 109 255 / 0.35), 0 0 20px rgb(186 109 255 / 0.2);
+
+  /* ── Motion ─────────────────────────────────────────────────────────────── */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --dur-fast: 180ms;
-  --dur: 320ms;
-  --dur-slow: 900ms;
+  --dur-fast:    180ms;
+  --dur:         320ms;
+  --dur-slow:    900ms;
 }
 
 /* ---------- Base ---------- */
@@ -155,7 +193,6 @@ button {
   border-radius: 4px;
 }
 
-/* Components set their own display; `hidden` must always win */
 [hidden] {
   display: none !important;
 }
@@ -181,11 +218,11 @@ button {
   border-radius: var(--radius-pill);
   background: var(--fg);
   color: var(--bg);
-  font-weight: 500;
+  font-weight: 600;
   transition: top var(--dur) var(--ease-out);
 }
 
-.skip-link:focus {
+.skip-link:focus-visible {
   top: 1rem;
 }
 
@@ -207,7 +244,6 @@ button {
   border-top: 1px solid var(--line);
 }
 
-/* Label column + content column, the site's core editorial rhythm */
 .split {
   display: grid;
   gap: var(--space-l);
@@ -232,40 +268,52 @@ button {
 /* ---------- Typography ---------- */
 
 .display {
+  font-family: var(--font-display);
   font-size: var(--step-6);
-  font-weight: 400;
-  line-height: 0.9;
-  letter-spacing: -0.05em;
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.display-xl {
+  font-family: var(--font-display);
+  font-size: var(--step-7);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
 }
 
 .h1 {
+  font-family: var(--font-display);
   font-size: var(--step-5);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 0.98;
-  letter-spacing: -0.042em;
+  letter-spacing: -0.04em;
   text-wrap: balance;
 }
 
 .h2 {
+  font-family: var(--font-display);
   font-size: var(--step-4);
-  font-weight: 400;
-  line-height: 1.03;
-  letter-spacing: -0.035em;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   text-wrap: balance;
 }
 
 .h3 {
+  font-family: var(--font-display);
   font-size: var(--step-2);
-  font-weight: 450;
+  font-weight: 600;
   line-height: 1.18;
   letter-spacing: -0.02em;
 }
 
 .lead {
   font-size: var(--step-1);
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--fg-2);
-  max-width: 42ch;
+  max-width: 44ch;
   text-wrap: pretty;
 }
 
@@ -297,9 +345,9 @@ button {
   align-items: center;
   gap: 0.7rem;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 450;
-  letter-spacing: 0.14em;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--fg-3);
 }
@@ -312,11 +360,12 @@ button {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 10px var(--accent);
+  background: var(--accent, var(--blue));
+  box-shadow: 0 0 10px var(--accent, var(--blue));
+  flex-shrink: 0;
 }
 
-/* The brand dot used as punctuation in headlines */
+/* Brand dot punctuation */
 .dot {
   display: inline-block;
   width: 0.15em;
@@ -331,57 +380,99 @@ button {
 /* ---------- Buttons & links ---------- */
 
 .btn {
-  --btn-bg: transparent;
-  --btn-fg: var(--fg);
+  --btn-bg:     transparent;
+  --btn-fg:     var(--fg);
   --btn-border: var(--line-strong);
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
   min-height: 3rem;
-  padding: 0.7rem 1.35rem;
+  padding: 0.72rem 1.45rem;
   border: 1px solid var(--btn-border);
   border-radius: var(--radius-pill);
   background: var(--btn-bg);
   color: var(--btn-fg);
+  font-family: var(--font-sans);
   font-size: 0.9375rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.2;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   cursor: pointer;
   transition:
     background-color var(--dur) var(--ease-out),
     border-color var(--dur) var(--ease-out),
     color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out),
     transform var(--dur-fast) var(--ease-out);
 }
 
 .btn:active {
-  transform: scale(0.98);
+  transform: scale(0.98) translateY(1px);
 }
 
+/* Primary — electric blue fill with layered depth and physical glass bevel */
 .btn--primary {
-  --btn-bg: var(--fg);
-  --btn-fg: var(--bg);
-  --btn-border: var(--fg);
+  --btn-bg:     linear-gradient(180deg, #0988ff 0%, #077ae7 100%);
+  --btn-fg:     #ffffff;
+  --btn-border: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 8px 24px -4px rgba(7, 122, 231, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32);
 }
 
 .btn--primary:hover {
-  --btn-bg: #fff;
-  --btn-border: #fff;
+  --btn-bg:     linear-gradient(180deg, #1fa0ff 0%, #0a84f5 100%);
+  --btn-border: rgba(255, 255, 255, 0.35);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 12px 32px -4px rgba(7, 122, 231, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn--ghost {
+  --btn-bg:     rgba(255, 255, 255, 0.04);
+  --btn-border: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .btn--ghost:hover {
-  --btn-border: var(--fg);
-  --btn-bg: rgb(255 255 255 / 0.04);
+  --btn-border: rgba(255, 255, 255, 0.28);
+  --btn-bg:     rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 8px 24px -6px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .btn--sm {
   min-height: 2.75rem;
-  padding: 0.5rem 1.05rem;
+  padding: 0.5rem 1.15rem;
   font-size: 0.875rem;
+}
+
+/* Blue-tinted ghost variant */
+.btn--blue-ghost {
+  --btn-bg:     rgba(7, 122, 231, 0.08);
+  --btn-border: rgba(7, 122, 231, 0.35);
+  --btn-fg:     var(--blue-bright);
+  box-shadow: inset 0 1px 0 rgba(7, 122, 231, 0.2);
+}
+
+.btn--blue-ghost:hover {
+  --btn-bg:     rgba(7, 122, 231, 0.16);
+  --btn-border: rgba(7, 122, 231, 0.65);
+  box-shadow:
+    inset 0 1px 0 rgba(7, 122, 231, 0.35),
+    0 8px 24px -6px rgba(7, 122, 231, 0.3);
+  transform: translateY(-1px);
 }
 
 main:focus {
@@ -392,7 +483,6 @@ html.menu-open {
   overflow: hidden;
 }
 
-/* Aligns a block with the content column of .split on desktop */
 @media (min-width: 62rem) {
   .offset {
     margin-left: calc((100% - var(--grid-gap)) * 0.25 + var(--grid-gap));
@@ -403,12 +493,17 @@ html.menu-open {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent);
+  background: currentColor;
+  opacity: 0.75;
   transition: transform var(--dur) var(--ease-out);
 }
 
+.btn--primary .btn__dot {
+  background: rgba(255 255 255 / 0.7);
+}
+
 .btn:hover .btn__dot {
-  transform: scale(1.6);
+  transform: scale(1.5);
 }
 
 .btn__icon {
@@ -437,11 +532,10 @@ html.menu-open {
   align-items: center;
   gap: 0.55rem;
   padding-block: 0.4rem;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.9375rem;
-  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
   background-image: linear-gradient(var(--line-strong), var(--line-strong)),
-    linear-gradient(var(--accent), var(--accent));
+    linear-gradient(var(--accent, var(--blue)), var(--accent, var(--blue)));
   background-size: 100% 1px, 0% 1px;
   background-position: 0 100%, 0 100%;
   background-repeat: no-repeat;
@@ -456,6 +550,36 @@ html.menu-open {
   width: 0.95em;
   height: 0.95em;
   transition: transform var(--dur) var(--ease-out);
+}
+
+/* ---------- Cosmic / atmospheric utilities ---------- */
+
+/* Full-section cosmic glow overlay */
+.cosmic-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Atmospheric orb — used as section background accent */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.orb--blue {
+  background: radial-gradient(circle, rgb(7 122 231 / 0.5) 0%, rgb(0 68 255 / 0.15) 50%, transparent 70%);
+}
+
+.orb--purple {
+  background: radial-gradient(circle, rgb(186 109 255 / 0.4) 0%, rgb(133 87 163 / 0.12) 50%, transparent 70%);
+}
+
+.orb--orange {
+  background: radial-gradient(circle, rgb(255 98 0 / 0.4) 0%, rgb(255 98 0 / 0.1) 50%, transparent 70%);
 }
 
 /* ---------- Motion ---------- */
@@ -484,12 +608,22 @@ html.reveal-ready [data-reveal] {
 }
 
 @keyframes fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+@keyframes slow-rotate {
+  to { transform: rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -15,7 +15,7 @@ type Scene = "system" | "think" | "create" | "amplify";
 type RGB = readonly [number, number, number];
 
 const C = {
-  blue: [59, 123, 255],
+  blue: [7, 122, 231],
   think: [255, 122, 89],
   create: [63, 214, 230],
   amplify: [255, 194, 71],
@@ -172,7 +172,7 @@ export function mountCosmos(canvas: HTMLCanvasElement) {
     const g = ctx.createRadialGradient(cx - core * 0.3, cy - core * 0.3, 0, cx, cy, core);
     g.addColorStop(0, "rgba(230,238,255,1)");
     g.addColorStop(0.45, rgba(C.blue, 1));
-    g.addColorStop(1, "rgba(30,80,210,1)");
+    g.addColorStop(1, "rgba(0,68,255,1)");
     dot(cx, cy, core, g);
   };
 
