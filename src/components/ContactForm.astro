@@ -13,12 +13,12 @@ const interests = [
 <form class="form" data-contact-form data-endpoint={site.formEndpoint} data-email={site.email} novalidate>
   <div class="form__row">
     <div class="field">
-      <label class="field__label" for="cf-name">Name</label>
+      <label class="field__label" for="cf-name">Full name</label>
       <input class="field__input" id="cf-name" name="name" type="text" autocomplete="name" required aria-describedby="cf-name-error" />
       <p class="field__error" id="cf-name-error" data-error-for="name"></p>
     </div>
     <div class="field">
-      <label class="field__label" for="cf-company">Company</label>
+      <label class="field__label" for="cf-company">Company name</label>
       <input class="field__input" id="cf-company" name="company" type="text" autocomplete="organization" required aria-describedby="cf-company-error" />
       <p class="field__error" id="cf-company-error" data-error-for="company"></p>
     </div>
@@ -26,14 +26,21 @@ const interests = [
 
   <div class="form__row">
     <div class="field">
-      <label class="field__label" for="cf-email">Work email</label>
-      <input class="field__input" id="cf-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="cf-email-error" />
-      <p class="field__error" id="cf-email-error" data-error-for="email"></p>
+      <label class="field__label" for="cf-city">City</label>
+      <input class="field__input" id="cf-city" name="city" type="text" autocomplete="address-level2" required aria-describedby="cf-city-error" />
+      <p class="field__error" id="cf-city-error" data-error-for="city"></p>
     </div>
     <div class="field">
-      <label class="field__label" for="cf-phone">Phone <span class="field__opt">Optional</span></label>
-      <input class="field__input" id="cf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" />
+      <label class="field__label" for="cf-phone">Phone number</label>
+      <input class="field__input" id="cf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required aria-describedby="cf-phone-error" />
+      <p class="field__error" id="cf-phone-error" data-error-for="phone"></p>
     </div>
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="cf-email">Email address</label>
+    <input class="field__input" id="cf-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="cf-email-error" />
+    <p class="field__error" id="cf-email-error" data-error-for="email"></p>
   </div>
 
   <fieldset class="field field--group">
@@ -55,11 +62,11 @@ const interests = [
   </fieldset>
 
   <div class="field">
-    <label class="field__label" for="cf-message">Tell us about your challenge</label>
+    <label class="field__label" for="cf-message">Tell us about your challenge <span class="field__opt">Optional</span></label>
     <p class="field__hint" id="cf-message-hint">
       A few lines is enough: where you are, what isn’t working, and what you’d like to achieve.
     </p>
-    <textarea class="field__input field__input--area" id="cf-message" name="message" rows="5" required aria-describedby="cf-message-hint cf-message-error"></textarea>
+    <textarea class="field__input field__input--area" id="cf-message" name="message" rows="5" aria-describedby="cf-message-hint cf-message-error"></textarea>
     <p class="field__error" id="cf-message-error" data-error-for="message"></p>
   </div>
 

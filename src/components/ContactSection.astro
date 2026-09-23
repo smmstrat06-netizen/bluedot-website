@@ -1,7 +1,8 @@
 ---
 import SectionLabel from "./SectionLabel.astro";
 import ContactForm from "./ContactForm.astro";
-import { site } from "../config/site";
+import Icon from "./Icon.astro";
+import { site, mapsUrl, linkedin } from "../config/site";
 
 interface Props {
   /** h1 on the dedicated contact page, h2 when embedded */
@@ -48,6 +49,31 @@ const next = [
             ))
           }
         </ol>
+      </div>
+
+      <div class="contact__info">
+        <div>
+          <p class="mono contact__kicker">Visit us</p>
+          <address class="contact__address">
+            {site.address.street}<br />
+            {site.address.city} {site.address.postalCode}, {site.address.countryName}
+          </address>
+          <a class="link" href={mapsUrl} target="_blank" rel="noopener">
+            Open in Google Maps<span class="sr-only"> (opens in a new tab)</span>
+            <Icon name="arrow-up-right" class="link__icon" />
+          </a>
+        </div>
+        {
+          linkedin && (
+            <div>
+              <p class="mono contact__kicker">Follow us</p>
+              <a class="link contact__social" href={linkedin} target="_blank" rel="noopener">
+                BlueDot on LinkedIn<span class="sr-only"> (opens in a new tab)</span>
+                <Icon name="arrow-up-right" class="link__icon" />
+              </a>
+            </div>
+          )
+        }
       </div>
 
       {
@@ -102,9 +128,12 @@ const next = [
       align-items: start;
     }
 
-    .contact__intro {
-      position: sticky;
-      top: calc(var(--header-h) + 2rem);
+    /* Only pin the intro when the whole column fits on screen */
+    @media (min-height: 64rem) {
+      .contact__intro {
+        position: sticky;
+        top: calc(var(--header-h) + 2rem);
+      }
     }
   }
 
@@ -157,5 +186,30 @@ const next = [
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.9), 0 0 40px -15px rgba(7, 122, 231, 0.15);
+  }
+
+  .contact__info {
+    display: grid;
+    gap: var(--space-l) var(--grid-gap);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 36rem) {
+    .contact__info {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .contact__address {
+    margin-block: var(--space-s) var(--space-2xs);
+    font-style: normal;
+    line-height: 1.55;
+    color: var(--fg);
+  }
+
+  .contact__social {
+    margin-top: var(--space-s);
   }
 </style>

@@ -16,6 +16,13 @@ export function organizationSchema(base: URL) {
     logo: new URL("/apple-touch-icon.png", base).href,
     slogan: site.tagline,
     description: site.description,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: site.address.street,
+      addressLocality: site.address.city,
+      postalCode: site.address.postalCode,
+      addressCountry: site.address.country,
+    },
     ...(site.email ? { email: site.email } : {}),
     ...(sameAs.length ? { sameAs } : {}),
   };

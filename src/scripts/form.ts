@@ -8,16 +8,31 @@ type Field = HTMLInputElement | HTMLTextAreaElement;
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+// Moroccan numbers (05/06/07…, +212…) or any international number written with + or 00
+const isPhone = (value: string) => {
+  const v = value.replace(/[\s.\-()]/g, "");
+  if (/^0[5-7]\d{8}$/.test(v)) return true;
+  if (/^(\+|00)212/.test(v)) return /^(\+|00)212[5-7]\d{8}$/.test(v);
+  return /^(\+|00)[1-9]\d{7,14}$/.test(v);
+};
+
+// Required fields only; the message is optional
 const rules: Record<string, (value: string) => string> = {
-  name: (v) => (v.trim() ? "" : "Please enter your name."),
+  name: (v) => (v.trim() ? "" : "Please enter your full name."),
   company: (v) => (v.trim() ? "" : "Please enter your company name."),
+  city: (v) => (v.trim() ? "" : "Please enter your city."),
+  phone: (v) =>
+    !v.trim()
+      ? "Please enter your phone number."
+      : isPhone(v)
+        ? ""
+        : "Please enter a valid phone number, like 06 12 34 56 78 or +212 6 12 34 56 78.",
   email: (v) =>
     !v.trim()
       ? "Please enter your email address."
       : EMAIL.test(v.trim())
         ? ""
         : "Please enter a valid email address, like name@company.com.",
-  message: (v) => (v.trim().length >= 10 ? "" : "Please tell us a little about your challenge."),
 };
 
 document.querySelectorAll<HTMLFormElement>("[data-contact-form]").forEach(initForm);
@@ -96,6 +111,7 @@ function initForm(form: HTMLFormElement) {
     const payload = {
       name,
       company: String(data.get("company") ?? "").trim(),
+      city: String(data.get("city") ?? "").trim(),
       email: String(data.get("email") ?? "").trim(),
       phone: String(data.get("phone") ?? "").trim(),
       interest: data.getAll("interest").map(String),

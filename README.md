@@ -28,7 +28,7 @@ Copy `.env.example` to `.env`, or set these variables in your hosting dashboard:
 The form sends:
 
 ```json
-{ "name": "", "company": "", "email": "", "phone": "", "interest": ["media"], "message": "", "page": "/contact/" }
+{ "name": "", "company": "", "city": "", "email": "", "phone": "", "interest": ["media"], "message": "", "page": "/contact/" }
 ```
 
 Without an endpoint, submissions are simulated in `npm run dev`. In a production build they fail with a visible message instead, so no lead is ever silently lost.
@@ -63,7 +63,7 @@ These couldn't be completed from the material provided and need BlueDot's input:
 
 1. **Domain:** set `SITE_URL`.
 2. **Form endpoint:** set `PUBLIC_FORM_ENDPOINT` and send a test enquiry.
-3. **Contact email and social profiles:** `PUBLIC_CONTACT_EMAIL`, and `social` in `src/config/site.ts`.
+3. **Contact email and Instagram:** set `PUBLIC_CONTACT_EMAIL`, and add an Instagram URL to `social` in `src/config/site.ts` if BlueDot has one. The office address and LinkedIn page are already set there.
 4. **Consulting page copy:** no Consulting page was supplied. Its copy is based on the home page (Consulting summary, expertise list, "your marketing problem might not be a marketing problem"). Please review.
 5. **Partly hidden source lines**, reconstructed and marked `[reconstructed]` in `src/data/divisions.ts`:
    - Consulting summary: "…from *marketing strategy* to fractional CMO leadership"
@@ -74,8 +74,6 @@ These couldn't be completed from the material provided and need BlueDot's input:
 7. **Proof:** no case studies, client names, testimonials or team information were provided, so the site doesn't invent any. When real material exists, the strongest place for it is a "Selected work" section after "How we work" on the home page.
 8. **Response time:** the form promises a reply but no timeframe. Add one (e.g. "within one business day") only if BlueDot can keep it.
 9. **Analytics and cookie consent**, if required in your markets.
-10. **Currency:** the illustrative Media dashboard uses `$1.20`, as the existing site did. Change it if BlueDot works in another currency.
-
 ## Optional imagery later
 
 If BlueDot adds photography, use it where it builds trust rather than as decoration:

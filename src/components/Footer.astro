@@ -1,5 +1,5 @@
 ---
-import { site } from "../config/site";
+import { site, mapsUrl } from "../config/site";
 import { divisions } from "../data/divisions";
 import Icon from "./Icon.astro";
 
@@ -72,6 +72,15 @@ const words = [
       <div class="footer__col">
         <p class="mono footer__heading">Get in touch</p>
         <ul role="list">
+          <li>
+            <a href={mapsUrl} class="footer__link footer__address" target="_blank" rel="noopener">
+              <address>
+                {site.address.street}<br />
+                {site.address.city} {site.address.postalCode}
+              </address>
+              <span class="sr-only">(opens Google Maps in a new tab)</span>
+            </a>
+          </li>
           {
             site.email && (
               <li>
@@ -234,5 +243,15 @@ const words = [
     .footer__bottom {
       padding-bottom: calc(6rem + env(safe-area-inset-bottom));
     }
+  }
+
+  .footer__address {
+    align-items: flex-start;
+    padding-block: 0.35rem;
+    line-height: 1.5;
+  }
+
+  .footer__address address {
+    font-style: normal;
   }
 </style>

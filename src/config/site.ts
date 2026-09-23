@@ -12,12 +12,24 @@ export const site = {
   email: import.meta.env.PUBLIC_CONTACT_EMAIL ?? "",
   // TODO: JSON endpoint for the contact form (Formspree, Basin, own API…)
   formEndpoint: import.meta.env.PUBLIC_FORM_ENDPOINT ?? "",
-  // TODO: add profile URLs; empty entries are not rendered
+  // Office address: shown in the contact section and footer, and used in structured data
+  address: {
+    street: "3È Étage, Résidence Harmony, Rue de Larache",
+    city: "Casablanca",
+    postalCode: "20250",
+    country: "MA",
+    countryName: "Morocco",
+  },
+  // Empty entries are not rendered
   social: [
-    { label: "LinkedIn", href: "" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/bluedot-mktg" },
     { label: "Instagram", href: "" },
   ],
 } as const;
+
+export const fullAddress = `${site.address.street}, ${site.address.city} ${site.address.postalCode}, ${site.address.countryName}`;
+export const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
+export const linkedin = site.social.find((s) => s.label === "LinkedIn")?.href ?? "";
 
 export const nav = [
   { label: "Consulting", href: "/consulting/", accent: "var(--think)" },
