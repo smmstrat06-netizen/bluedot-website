@@ -345,7 +345,7 @@ button {
   align-items: center;
   gap: 0.7rem;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -544,6 +544,22 @@ html.menu-open {
 
 .link:hover {
   background-size: 100% 1px, 100% 1px;
+}
+
+/* Extends the tap area to 44px+ without moving the underline */
+.link {
+  position: relative;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  inset: -0.25rem 0;
+}
+
+/* Keeps words (and a trailing brand dot) together on one line */
+.nowrap {
+  white-space: nowrap;
 }
 
 .link__icon {

@@ -265,6 +265,7 @@ const rings = [
   }
 
   .dpanel__watermark {
+    display: none;
     position: absolute;
     top: 1.5rem;
     right: 2rem;
@@ -280,6 +281,11 @@ const rings = [
   }
 
   @media (min-width: 62rem) {
+    /* Only shown once panels become cards with padding around the number */
+    .dpanel__watermark {
+      display: block;
+    }
+
     .dpanel {
       min-height: 64svh;
       display: flex;

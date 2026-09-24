@@ -38,7 +38,7 @@ const others = divisions.filter((d) => d.id !== current);
                 {d.index} — {d.verb}
               </span>
               <span class="xcard__name">
-                BlueDot {d.name}<span class="dot" style={`--dot: ${d.accent}`} />
+                BlueDot <span class="nowrap">{d.name}<span class="dot" style={`--dot: ${d.accent}`} /></span>
               </span>
               <span class="xcard__text">{d.summary}</span>
               <span class="xcard__cta">
@@ -157,6 +157,13 @@ const others = divisions.filter((d) => d.id !== current);
     font-size: var(--step-4);
     line-height: 1;
     letter-spacing: -0.04em;
+  }
+
+  /* Small phones: "BlueDot Consulting" fits on one line */
+  @media (max-width: 29.99rem) {
+    .xcard__name {
+      font-size: min(var(--step-4), 7.4vw);
+    }
   }
 
   .xcard__text {

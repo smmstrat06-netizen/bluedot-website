@@ -36,7 +36,7 @@ const words = [
     <div class="hero__content">
       <p class="label hero__eyebrow">
         <span class="label__dot" aria-hidden="true"></span>
-        Marketing strategy · Creative · Media
+        <span>Marketing strategy <span class="nowrap">· Creative</span> <span class="nowrap">· Media</span></span>
       </p>
 
       <h1 id="hero-title" class="hero__title">
@@ -420,6 +420,12 @@ const words = [
       width: 100%;
     }
 
+    /* Tighter tracking keeps the eyebrow on one line on most phones */
+    .hero__eyebrow {
+      letter-spacing: 0.08em;
+      gap: 0.55rem;
+    }
+
     .hindex {
       border-radius: 0;
       border-inline: 0;
@@ -432,15 +438,17 @@ const words = [
       justify-items: center;
     }
 
+    /* One line per cell so the three names line up; the verb alone identifies the division */
     .hindex__meta {
       justify-content: center;
       gap: 0.35rem;
-      font-size: 0.6875rem;
+      font-size: 0.75rem;
       letter-spacing: 0.08em;
+      white-space: nowrap;
     }
 
     .hindex__num {
-      display: inline;
+      display: none;
     }
 
     .hindex__name {
