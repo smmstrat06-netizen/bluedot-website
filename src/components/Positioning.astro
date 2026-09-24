@@ -1,5 +1,7 @@
 ---
 import SectionLabel from "./SectionLabel.astro";
+import { getLang } from "../i18n";
+import { ui } from "../i18n/ui";
 
 interface Props {
   num: string;
@@ -9,17 +11,18 @@ interface Props {
 }
 
 const { num, title, text, fit } = Astro.props;
+const t = ui[getLang(Astro.url)].labels;
 ---
 
 <section class="section" aria-labelledby="positioning-title">
   <div class="container split">
-    <SectionLabel num={num} text="Positioning" />
+    <SectionLabel num={num} text={t.positioning} />
     <div>
       <h2 id="positioning-title" class="h2 pos__title" data-reveal>{title}</h2>
       <div class="pos__grid">
         <p class="lead pos__text" data-reveal style="--i: 1">{text}</p>
         <div data-reveal style="--i: 2">
-          <h3 class="mono pos__kicker">Right for you if</h3>
+          <h3 class="mono pos__kicker">{t.rightForYou}</h3>
           <ul role="list" class="pos__list">
             {
               fit.map((item) => (
@@ -79,6 +82,5 @@ const { num, title, text, fit } = Astro.props;
     margin-top: 0.62em;
     border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 8px var(--accent);
   }
 </style>

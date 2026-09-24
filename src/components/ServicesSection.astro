@@ -2,6 +2,8 @@
 import SectionLabel from "./SectionLabel.astro";
 import Icon from "./Icon.astro";
 import type { Service } from "../data/divisions";
+import { getLang, href } from "../i18n";
+import { ui } from "../i18n/ui";
 
 interface Props {
   num: string;
@@ -13,12 +15,14 @@ interface Props {
 }
 
 const { num, title, lead, services, group } = Astro.props;
+const lang = getLang(Astro.url);
+const t = ui[lang].labels;
 ---
 
 <section id="services" class="section section--rule" aria-labelledby="services-title">
   <div class="container">
     <div class="split">
-      <SectionLabel num={num} text="What we do" />
+      <SectionLabel num={num} text={t.whatWeDo} />
       <div>
         <h2 id="services-title" class="h2" data-reveal>{title}</h2>
         <p class="lead services__lead" data-reveal style="--i: 1">{lead}</p>
@@ -41,18 +45,26 @@ const { num, title, lead, services, group } = Astro.props;
               <div class="service__body">
                 <dl class="service__grid">
                   <div class="service__cell">
-                    <dt class="mono">The problem</dt>
+                    <dt class="mono">{t.problem}</dt>
                     <dd>{s.problem}</dd>
                   </div>
                   <div class="service__cell">
-                    <dt class="mono">What we do</dt>
+                    <dt class="mono">{t.whatWeDo}</dt>
                     <dd>{s.approach}</dd>
                   </div>
                   <div class="service__cell service__cell--result">
-                    <dt class="mono">What you get</dt>
+                    <dt class="mono">{t.whatYouGet}</dt>
                     <dd>{s.result}</dd>
                   </div>
                 </dl>
+                {
+                  s.link && (
+                    <a href={href(s.link.to, lang)} class="link service__more">
+                      {s.link.label}
+                      <Icon name="arrow-right" class="link__icon link__icon--right" />
+                    </a>
+                  )
+                }
               </div>
             </details>
           </li>
@@ -234,10 +246,17 @@ const { num, title, lead, services, group } = Astro.props;
 
   .service__cell--result dt::before {
     background: var(--accent);
-    box-shadow: 0 0 8px var(--accent);
   }
 
   .service__cell--result dd {
     color: var(--fg);
+  }
+
+  .service__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-m);
+    font-weight: 500;
   }
 </style>

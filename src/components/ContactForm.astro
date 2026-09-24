@@ -1,24 +1,29 @@
 ---
 import { site } from "../config/site";
 import Icon from "./Icon.astro";
+import { getLang, href } from "../i18n";
+import { ui } from "../i18n/ui";
+
+const lang = getLang(Astro.url);
+const t = ui[lang].form;
 
 const interests = [
-  { value: "consulting", label: "Consulting", hint: "Strategy & leadership", accent: "var(--think)" },
-  { value: "agency", label: "Agency", hint: "Brand, content & digital", accent: "var(--create)" },
-  { value: "media", label: "Media", hint: "Planning, buying & performance", accent: "var(--amplify)" },
-  { value: "unsure", label: "Not sure yet", hint: "Help us find the right start", accent: "var(--blue)" },
+  { value: "consulting", label: "Consulting", hint: t.interests.consulting, accent: "var(--think)" },
+  { value: "agency", label: "Agency", hint: t.interests.agency, accent: "var(--create)" },
+  { value: "media", label: "Media", hint: t.interests.media, accent: "var(--amplify)" },
+  { value: "unsure", label: t.interests.unsure, hint: t.interests.unsureHint, accent: "var(--blue)" },
 ];
 ---
 
-<form class="form" data-contact-form data-endpoint={site.formEndpoint} data-email={site.email} novalidate>
+<form class="form" data-contact-form data-email={site.email} novalidate>
   <div class="form__row">
     <div class="field">
-      <label class="field__label" for="cf-name">Full name</label>
+      <label class="field__label" for="cf-name">{t.name}</label>
       <input class="field__input" id="cf-name" name="name" type="text" autocomplete="name" required aria-describedby="cf-name-error" />
       <p class="field__error" id="cf-name-error" data-error-for="name"></p>
     </div>
     <div class="field">
-      <label class="field__label" for="cf-company">Company name</label>
+      <label class="field__label" for="cf-company">{t.company}</label>
       <input class="field__input" id="cf-company" name="company" type="text" autocomplete="organization" required aria-describedby="cf-company-error" />
       <p class="field__error" id="cf-company-error" data-error-for="company"></p>
     </div>
@@ -26,25 +31,25 @@ const interests = [
 
   <div class="form__row">
     <div class="field">
-      <label class="field__label" for="cf-city">City</label>
+      <label class="field__label" for="cf-city">{t.city}</label>
       <input class="field__input" id="cf-city" name="city" type="text" autocomplete="address-level2" required aria-describedby="cf-city-error" />
       <p class="field__error" id="cf-city-error" data-error-for="city"></p>
     </div>
     <div class="field">
-      <label class="field__label" for="cf-phone">Phone number</label>
+      <label class="field__label" for="cf-phone">{t.phone}</label>
       <input class="field__input" id="cf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required aria-describedby="cf-phone-error" />
       <p class="field__error" id="cf-phone-error" data-error-for="phone"></p>
     </div>
   </div>
 
   <div class="field">
-    <label class="field__label" for="cf-email">Email address</label>
+    <label class="field__label" for="cf-email">{t.email}</label>
     <input class="field__input" id="cf-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="cf-email-error" />
     <p class="field__error" id="cf-email-error" data-error-for="email"></p>
   </div>
 
   <fieldset class="field field--group">
-    <legend class="field__label">What can we help with? <span class="field__opt">Choose any</span></legend>
+    <legend class="field__label">{t.help} <span class="field__opt">{t.chooseAny}</span></legend>
     <div class="choices">
       {
         interests.map((item) => (
@@ -62,25 +67,22 @@ const interests = [
   </fieldset>
 
   <div class="field">
-    <label class="field__label" for="cf-message">Tell us about your challenge <span class="field__opt">Optional</span></label>
-    <p class="field__hint" id="cf-message-hint">
-      A few lines is enough: where you are, what isn’t working, and what you’d like to achieve.
-    </p>
+    <label class="field__label" for="cf-message">{t.message} <span class="field__opt">{t.optional}</span></label>
+    <p class="field__hint" id="cf-message-hint">{t.messageHint}</p>
     <textarea class="field__input field__input--area" id="cf-message" name="message" rows="5" aria-describedby="cf-message-hint cf-message-error"></textarea>
     <p class="field__error" id="cf-message-error" data-error-for="message"></p>
   </div>
 
   <div class="form__trap" aria-hidden="true">
-    <label for="cf-website">Leave this field empty</label>
+    <label for="cf-website">{t.trap}</label>
     <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
   </div>
 
   <div class="form__footer">
     <button type="submit" class="btn btn--primary form__submit">
-      <span class="btn__dot" aria-hidden="true"></span>
-      <span data-submit-label>Send message</span>
+      <span data-submit-label>{t.submit}</span>
     </button>
-    <p class="small muted form__privacy">We only use your details to reply to your enquiry.</p>
+    <p class="small muted form__privacy">{t.privacy}</p>
   </div>
 
   <p class="form__status" role="alert" data-form-status></p>
@@ -88,14 +90,12 @@ const interests = [
 
 <div class="success" data-form-success tabindex="-1" hidden>
   <span class="success__mark" aria-hidden="true"><Icon name="check" /></span>
-  <h3 class="success__title">Thanks<span data-success-name></span> — your message is in.</h3>
-  <p class="body">
-    We’ll get back to you to set up a first conversation. In the meantime, feel free to look around.
-  </p>
+  <h3 class="success__title">{t.thanks}<span data-success-name></span> — {t.received}</h3>
+  <p class="body">{t.successText}</p>
   <div class="success__links">
-    <a href="/consulting/" class="link">Consulting</a>
-    <a href="/agency/" class="link">Agency</a>
-    <a href="/media/" class="link">Media</a>
+    <a href={href("consulting", lang)} class="link">Consulting</a>
+    <a href={href("agency", lang)} class="link">Agency</a>
+    <a href={href("media", lang)} class="link">Media</a>
   </div>
 </div>
 
@@ -150,8 +150,7 @@ const interests = [
     font-family: var(--font-mono);
     font-size: 0.75rem;
     font-weight: 400;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0;
     color: var(--fg-3);
   }
 
@@ -169,9 +168,6 @@ const interests = [
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-s);
     background: rgba(8, 11, 22, 0.7);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     color: var(--fg);
     font-size: 1rem;
     transition:
@@ -299,14 +295,12 @@ const interests = [
 
   .choice:has(:checked) {
     border-color: color-mix(in oklab, var(--accent) 55%, rgba(255, 255, 255, 0.15));
-    background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 12%, transparent), rgba(12, 16, 32, 0.75) 90%);
-    box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    background: rgb(255 255 255 / 0.03);
   }
 
   .choice:has(:checked) .choice__box {
     border-color: var(--accent);
     background: var(--accent);
-    box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 45%, transparent);
   }
 
   .choice:has(:checked) .choice__box :global(.choice__check) {
@@ -364,7 +358,6 @@ const interests = [
     border-radius: 50%;
     background: var(--blue);
     color: #fff;
-    box-shadow: 0 0 30px rgb(7 122 231 / 0.6);
   }
 
   .success__mark :global(svg) {

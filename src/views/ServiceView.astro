@@ -1,0 +1,73 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import DivisionHero from "../components/DivisionHero.astro";
+import Positioning from "../components/Positioning.astro";
+import ServicesSection from "../components/ServicesSection.astro";
+import HowWeWork from "../components/home/HowWeWork.astro";
+import FAQ from "../components/FAQ.astro";
+import CrossLinks from "../components/CrossLinks.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { getDivision } from "../data/divisions";
+import { getExtraPage, type ExtraId } from "../data/extra-services";
+import { faqSchema, serviceSchema } from "../lib/schema";
+import { getLang, href } from "../i18n";
+import earth from "../assets/brand/earth.jpg";
+import heroCosmic from "../assets/brand/hero-cosmic.jpg";
+
+interface Props {
+  page: ExtraId;
+}
+
+// Website design and events are BlueDot Agency services with their own page
+const lang = getLang(Astro.url);
+const d = getDivision("agency", lang);
+const p = getExtraPage(Astro.props.page, lang);
+const path = href(p.id, lang);
+
+const schema = [
+  ...serviceSchema(
+    {
+      name: p.h1,
+      description: p.seo.description,
+      path,
+      serviceType: p.caps,
+      trail: [
+        { name: `BlueDot ${d.name}`, path: d.href },
+        { name: p.h1, path },
+      ],
+    },
+    Astro.site!,
+    lang,
+  ),
+  faqSchema(p.faqs),
+];
+---
+
+<BaseLayout title={p.seo.title} description={p.seo.description} image="/og/agency.png" accent={d.accent} schema={schema}>
+  <DivisionHero
+    division={d}
+    h1={p.h1}
+    display={p.display}
+    lead={p.lead}
+    caps={p.caps}
+    image={p.id === "website" ? earth : heroCosmic}
+  />
+
+  <Positioning num="01" title={p.positioning.title} text={p.positioning.text} fit={p.positioning.fit} />
+
+  <ServicesSection num="02" title={p.services.title} lead={p.services.lead} services={p.services.items} group={`${p.id}-services`} />
+
+  <HowWeWork num="03" title={p.how.title} steps={p.how.steps} />
+
+  <FAQ num="04" items={p.faqs} />
+
+  <CrossLinks num="05" title={p.cross.title} text={p.cross.text} />
+
+  <CtaBand
+    title={p.cta.title}
+    text={p.cta.text}
+    cta={p.cta.label}
+    href={href("contact", lang, "?interest=agency")}
+    accent={d.accent}
+  />
+</BaseLayout>

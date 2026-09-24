@@ -1,11 +1,26 @@
 ---
-const links = ["Great idea", "Craft", "Content", "Execution"];
+import { getLang } from "../../i18n";
+
+const copy = {
+  en: {
+    links: ["Great idea", "Craft", "Content", "Execution"],
+    result: "Result",
+    end: "A campaign that works",
+    caption: "Every link has to hold. Skip one, and a great idea never reaches the people it was made for.",
+  },
+  fr: {
+    links: ["Grande idée", "Savoir-faire", "Contenu", "Exécution"],
+    result: "Résultat",
+    end: "Une campagne qui fonctionne",
+    caption: "Chaque maillon doit tenir. Sautez-en un, et une grande idée n’atteint jamais les personnes pour qui elle a été pensée.",
+  },
+}[getLang(Astro.url)];
 ---
 
 <figure class="chain" data-reveal>
   <ol role="list" class="chain__list">
     {
-      links.map((name, i) => (
+      copy.links.map((name, i) => (
         <li class="chain__node" style={`--i: ${i}`}>
           <span class="chain__dot" aria-hidden="true" />
           <span class="mono chain__num">{String(i + 1).padStart(2, "0")}</span>
@@ -15,13 +30,11 @@ const links = ["Great idea", "Craft", "Content", "Execution"];
     }
     <li class="chain__node chain__node--end" style="--i: 4">
       <span class="chain__dot" aria-hidden="true"></span>
-      <span class="mono chain__num">Result</span>
-      <span class="chain__name">A campaign that works</span>
+      <span class="mono chain__num">{copy.result}</span>
+      <span class="chain__name">{copy.end}</span>
     </li>
   </ol>
-  <figcaption class="body chain__caption">
-    Every link has to hold. Skip one, and a great idea never reaches the people it was made for.
-  </figcaption>
+  <figcaption class="body chain__caption">{copy.caption}</figcaption>
 </figure>
 
 <style>
@@ -113,7 +126,6 @@ const links = ["Great idea", "Craft", "Content", "Execution"];
     height: 6px;
     border-radius: 50%;
     background: var(--create);
-    box-shadow: 0 0 10px var(--create);
     transition: transform 0.6s var(--ease-out);
     transition-delay: calc(var(--i) * 380ms + 250ms);
   }
@@ -130,7 +142,6 @@ const links = ["Great idea", "Craft", "Content", "Execution"];
     width: 8px;
     height: 8px;
     background: var(--blue);
-    box-shadow: 0 0 16px var(--blue);
   }
 
   .chain__num {

@@ -1,15 +1,20 @@
 ---
 import Icon from "./Icon.astro";
+import { getLang, href } from "../i18n";
+import { ui } from "../i18n/ui";
+
+const lang = getLang(Astro.url);
+const t = ui[lang].mcta;
 ---
 
 <div class="mcta" data-mcta>
-  <a href="/contact/" class="mcta__inner">
+  <a href={href("contact", lang)} class="mcta__inner">
     <span class="mcta__text">
-      <span class="mcta__title">Have a marketing challenge?</span>
-      <span class="mcta__sub">Tell us where you are.</span>
+      <span class="mcta__title">{t.title}</span>
+      <span class="mcta__sub">{t.sub}</span>
     </span>
     <span class="mcta__btn">
-      Let’s talk
+      {t.btn}
       <Icon name="arrow-up-right" class="mcta__icon" />
     </span>
   </a>
@@ -107,7 +112,7 @@ import Icon from "./Icon.astro";
     min-height: 2.75rem;
     padding-inline: 1rem;
     border-radius: var(--radius-pill);
-    background: var(--blue);
+    background: #0670d8;
     color: #fff;
     font-size: 0.875rem;
     font-weight: 600;

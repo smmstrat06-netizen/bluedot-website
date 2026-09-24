@@ -1,7 +1,24 @@
 ---
 import SectionLabel from "../SectionLabel.astro";
 import Icon from "../Icon.astro";
-import { divisions } from "../../data/divisions";
+import { getDivisions } from "../../data/divisions";
+import { getLang } from "../../i18n";
+import { ui } from "../../i18n/ui";
+
+const lang = getLang(Astro.url);
+const t = ui[lang].labels;
+const divisions = getDivisions(lang);
+
+const copy = {
+  en: {
+    title: "Three areas of expertise. One connected team.",
+    lead: "Start with the one you need, or bring all three together. Each division stands on its own — and gets stronger with the other two.",
+  },
+  fr: {
+    title: "Trois expertises. Une seule équipe connectée.",
+    lead: "Commencez par celle dont vous avez besoin, ou réunissez les trois. Chaque pôle fonctionne seul — et se renforce avec les deux autres.",
+  },
+}[lang];
 
 const rings = [
   { r: 118, dur: 48, delay: -14 },
@@ -13,13 +30,10 @@ const rings = [
 <section id="divisions" class="section section--rule divs" aria-labelledby="divs-title">
   <div class="container">
     <div class="split divs__head">
-      <SectionLabel num="02" text="What we do" />
+      <SectionLabel num="02" text={t.whatWeDo} />
       <div>
-        <h2 id="divs-title" class="h2" data-reveal>Three areas of expertise. One connected team.</h2>
-        <p class="lead divs__lead" data-reveal style="--i: 1">
-          Start with the one you need, or bring all three together. Each division stands on its own — and gets
-          stronger with the other two.
-        </p>
+        <h2 id="divs-title" class="h2" data-reveal>{copy.title}</h2>
+        <p class="lead divs__lead" data-reveal style="--i: 1">{copy.lead}</p>
       </div>
     </div>
 
@@ -45,7 +59,6 @@ const rings = [
                   <circle class="omap__ring" cx="300" cy="300" r={rings[i].r} />
                   <g class="omap__spin">
                     <line class="omap__link" x1="300" y1="300" x2={300 + rings[i].r} y2="300" />
-                    <circle class="omap__glow" cx={300 + rings[i].r} cy="300" r="24" />
                     <circle class="omap__planet" cx={300 + rings[i].r} cy="300" r="5.5" />
                   </g>
                   <text class="omap__label" x="300" y={300 - rings[i].r - 12} text-anchor="middle">
@@ -55,7 +68,6 @@ const rings = [
               ))
             }
 
-            <circle cx="300" cy="300" r="96" fill="url(#omap-core)"></circle>
             <circle class="omap__core" cx="300" cy="300" r="11"></circle>
           </svg>
         </div>
@@ -65,9 +77,7 @@ const rings = [
         {
           divisions.map((d) => (
             <li class="dpanel" data-panel={d.id} style={`--accent: ${d.accent}`}>
-              <span class="dpanel__watermark" aria-hidden="true">{d.index}</span>
               <p class="mono dpanel__meta">
-                <span class="label__dot" aria-hidden="true" />
                 {d.index} — {d.headline}
               </p>
               <h3 class="dpanel__name">
@@ -77,11 +87,11 @@ const rings = [
 
               <dl class="dpanel__facts">
                 <div class="dpanel__fact">
-                  <dt class="mono">The problem</dt>
+                  <dt class="mono">{t.problem}</dt>
                   <dd>{d.problem}</dd>
                 </div>
                 <div class="dpanel__fact">
-                  <dt class="mono">What we do</dt>
+                  <dt class="mono">{t.whatWeDo}</dt>
                   <dd>
                     <ul role="list" class="dpanel__caps">
                       {d.capabilities.map((c) => (
@@ -91,13 +101,13 @@ const rings = [
                   </dd>
                 </div>
                 <div class="dpanel__fact">
-                  <dt class="mono">What you get</dt>
+                  <dt class="mono">{t.whatYouGet}</dt>
                   <dd>{d.outcome}</dd>
                 </div>
               </dl>
 
               <a href={d.href} class="link dpanel__link">
-                Explore {d.name}
+                {t.explore} {d.name}
                 <Icon name="arrow-right" class="link__icon link__icon--right" />
               </a>
             </li>
@@ -116,9 +126,6 @@ const rings = [
   .divs {
     position: relative;
     overflow: hidden;
-    background:
-      radial-gradient(ellipse 800px 600px at 20% 40%, rgba(7, 122, 231, 0.06), transparent 70%),
-      radial-gradient(ellipse 600px 500px at 85% 70%, rgba(234, 109, 32, 0.03), transparent 65%);
   }
 
   .divs::before {
@@ -128,7 +135,7 @@ const rings = [
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(7, 122, 231, 0.3) 20%, rgba(255, 255, 255, 0.12) 50%, rgba(234, 109, 32, 0.25) 80%, transparent);
+    background: var(--line);
     pointer-events: none;
   }
 
@@ -214,14 +221,13 @@ const rings = [
 
   .omap__planet {
     fill: var(--accent);
-    filter: drop-shadow(0 0 4px var(--accent));
   }
 
   .omap__label {
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 500;
-    letter-spacing: 0.16em;
+    letter-spacing: 0;
     fill: var(--fg-3);
     transition:
       fill 0.7s var(--ease-out),
@@ -230,13 +236,11 @@ const rings = [
 
   .omap__core {
     fill: var(--blue-sky);
-    filter: drop-shadow(0 0 8px #077AE7);
   }
 
   .omap__orbit.is-active .omap__ring {
     stroke: var(--accent);
     stroke-opacity: 0.8;
-    filter: drop-shadow(0 0 6px color-mix(in oklab, var(--accent) 60%, transparent));
   }
 
   .omap__orbit.is-active .omap__link {
@@ -281,58 +285,11 @@ const rings = [
   }
 
   @media (min-width: 62rem) {
-    /* Only shown once panels become cards with padding around the number */
-    .dpanel__watermark {
-      display: block;
-    }
-
     .dpanel {
       min-height: 64svh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: clamp(1.75rem, 1.25rem + 1.5vw, 2.75rem);
-      margin-block: 0.75rem;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: var(--radius-m);
-      background: rgba(10, 14, 26, 0.25);
-      opacity: 0.7;
-    }
-
-    /* Left accent vertical indicator on active card */
-    .dpanel::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 15%;
-      bottom: 15%;
-      width: 2.5px;
-      background: var(--accent);
-      border-radius: 2px;
-      transform: scaleY(0);
-      transform-origin: center;
-      transition: transform 0.4s var(--ease-out);
-    }
-
-    .dpanel.is-active {
-      opacity: 1;
-      background:
-        radial-gradient(ellipse 100% 90% at 100% 50%, color-mix(in oklab, var(--accent) 9%, transparent), transparent 75%),
-        rgba(10, 14, 28, 0.75);
-      border-color: color-mix(in oklab, var(--accent) 30%, rgba(255, 255, 255, 0.08));
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow:
-        0 24px 48px -18px rgba(0, 0, 0, 0.7),
-        0 0 35px -12px color-mix(in oklab, var(--accent) 25%, transparent);
-    }
-
-    .dpanel.is-active::before {
-      transform: scaleY(1);
-    }
-
-    .dpanel.is-active .dpanel__watermark {
-      color: color-mix(in oklab, var(--accent) 10%, transparent);
     }
   }
 
@@ -341,7 +298,7 @@ const rings = [
     align-items: center;
     gap: 0.7rem;
     font-size: 0.8125rem;
-    letter-spacing: 0.12em;
+    letter-spacing: 0;
     color: var(--fg-3);
   }
 
@@ -378,47 +335,24 @@ const rings = [
   .dpanel__fact dt {
     color: var(--fg-3);
     font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    letter-spacing: 0;
     padding-top: 0.2rem;
   }
 
   .dpanel__caps {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 0.65rem;
+    gap: 0.25rem 0.65rem;
   }
 
   .dpanel__caps li {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-s);
-    background: rgba(255, 255, 255, 0.035);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    font-family: var(--font-sans);
-    font-size: var(--step--1);
-    color: rgba(255, 255, 255, 0.9);
-    transition:
-      background-color 0.25s var(--ease-out),
-      border-color 0.25s var(--ease-out),
-      transform 0.2s var(--ease-out);
+    color: var(--fg);
   }
 
-  .dpanel__caps li:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: color-mix(in oklab, var(--accent) 45%, rgba(255, 255, 255, 0.2));
-    transform: translateY(-1px);
-  }
-
-  .dpanel__caps li::before {
-    content: "";
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 6px var(--accent);
+  .dpanel__caps li:not(:last-child)::after {
+    content: "/";
+    margin-left: 0.65rem;
+    color: var(--fg-3);
   }
 
   .dpanel__link {

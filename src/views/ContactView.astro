@@ -1,0 +1,126 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactSection from "../components/ContactSection.astro";
+import Icon from "../components/Icon.astro";
+import { getDivisions } from "../data/divisions";
+import { getLang } from "../i18n";
+
+const lang = getLang(Astro.url);
+const divisions = getDivisions(lang);
+
+const copy = {
+  en: {
+    title: "Contact: Marketing Agency in Casablanca | BlueDot",
+    description:
+      "Tell BlueDot about your marketing challenge, project or question. We’ll get back to you to set up a first conversation. Office on Rue de Larache, Casablanca.",
+    explore: "Not ready to talk yet? Explore how we help.",
+  },
+  fr: {
+    title: "Contact : agence de communication à Casablanca | BlueDot",
+    description:
+      "Parlez-nous de votre enjeu marketing, de votre projet ou de votre question. Nous revenons vers vous pour un premier échange. Bureaux rue de Larache, Casablanca.",
+    explore: "Pas encore prêt à échanger ? Découvrez comment nous vous aidons.",
+  },
+}[lang];
+---
+
+<BaseLayout title={copy.title} description={copy.description} mobileCta={false}>
+  <ContactSection as="h1" num="" />
+
+  <section class="section section--rule explore" aria-labelledby="explore-title">
+    <div class="container">
+      <h2 id="explore-title" class="mono explore__title">{copy.explore}</h2>
+      <ul role="list" class="explore__list">
+        {
+          divisions.map((d) => (
+            <li>
+              <a href={d.href} class="explore__link" style={`--accent: ${d.accent}`}>
+                <span class="mono explore__meta">
+                  {d.index} — {d.verb}
+                </span>
+                <span class="explore__name">
+                  {d.name}<span class="dot" style={`--dot: ${d.accent}`} />
+                </span>
+                <span class="explore__desc">{d.tagline}</span>
+                <Icon name="arrow-up-right" class="explore__icon" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .explore {
+    padding-block: var(--space-2xl) var(--space-3xl);
+  }
+
+  .explore__title {
+    color: var(--fg-3);
+    font-weight: 450;
+  }
+
+  .explore__list {
+    display: grid;
+    margin-top: var(--space-l);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 48rem) {
+    .explore__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .explore__list li + li {
+      border-left: 1px solid var(--line);
+    }
+
+    .explore__list li + li .explore__link {
+      padding-left: var(--space-l);
+    }
+  }
+
+  .explore__list li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .explore__link {
+    position: relative;
+    display: grid;
+    gap: 0.35rem;
+    padding: var(--space-l) 3rem var(--space-l) 0;
+  }
+
+  .explore__meta {
+    color: var(--fg-3);
+  }
+
+  .explore__name {
+    font-size: var(--step-3);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .explore__desc {
+    color: var(--fg-2);
+  }
+
+  .explore__link :global(.explore__icon) {
+    position: absolute;
+    top: var(--space-l);
+    right: 1rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    color: var(--fg-3);
+    transition:
+      transform var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out);
+  }
+
+  .explore__link:hover :global(.explore__icon) {
+    color: var(--accent);
+    transform: translate(3px, -3px);
+  }
+</style>

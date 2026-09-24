@@ -19,7 +19,6 @@ const { title, text, cta, href, accent } = Astro.props;
       <p class="lead cta__text" data-reveal style="--i: 1">{text}</p>
       <div class="cta__actions" data-reveal style="--i: 2">
         <a href={href} class="btn btn--primary">
-          <span class="btn__dot" aria-hidden="true"></span>
           {cta}
           <Icon name="arrow-up-right" class="btn__icon" />
         </a>
@@ -49,7 +48,6 @@ const { title, text, cta, href, accent } = Astro.props;
     width: 50rem;
     aspect-ratio: 1;
     transform: translateY(-50%);
-    background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 12%, transparent), transparent);
     pointer-events: none;
   }
 
@@ -117,7 +115,6 @@ const { title, text, cta, href, accent } = Astro.props;
     margin-left: -5px;
     border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 20px var(--accent);
   }
 
   .cta__core {
@@ -129,9 +126,6 @@ const { title, text, cta, href, accent } = Astro.props;
     margin: -7px 0 0 -7px;
     border-radius: 50%;
     background: var(--blue-sky);
-    box-shadow:
-      0 0 30px 6px rgb(7 122 231 / 0.6),
-      0 0 90px 30px rgb(7 122 231 / 0.2);
   }
 
   @keyframes cta-spin {

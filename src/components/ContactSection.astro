@@ -3,6 +3,8 @@ import SectionLabel from "./SectionLabel.astro";
 import ContactForm from "./ContactForm.astro";
 import Icon from "./Icon.astro";
 import { site, mapsUrl, linkedin } from "../config/site";
+import { getLang } from "../i18n";
+import { ui } from "../i18n/ui";
 
 interface Props {
   /** h1 on the dedicated contact page, h2 when embedded */
@@ -13,12 +15,7 @@ interface Props {
 const { as = "h2", num = "07" } = Astro.props;
 const Heading = as;
 const isPage = as === "h1";
-
-const next = [
-  "You tell us where you are and what you’re trying to achieve.",
-  "We get back to you to set up a first conversation.",
-  "We listen first — and only recommend what makes sense for your business.",
-];
+const { contact: t, labels } = ui[getLang(Astro.url)];
 ---
 
 <section
@@ -29,19 +26,17 @@ const next = [
 >
   <div class="container contact__grid">
     <div class="contact__intro">
-      <SectionLabel num={num} text="Contact" />
+      <SectionLabel num={num} text={t.label} />
       <Heading id="contact-title" class="h1 contact__title">
-        Let’s connect the dots<span class="dot"><span class="sr-only">.</span></span>
+        {t.title}<span class="dot"><span class="sr-only">.</span></span>
       </Heading>
-      <p class="lead contact__lead">
-        Have a marketing challenge, a project to launch or simply need another perspective? Tell us where you are.
-      </p>
+      <p class="lead contact__lead">{t.lead}</p>
 
       <div class="contact__next">
-        <p class="mono contact__kicker">What happens next</p>
+        <p class="mono contact__kicker">{t.nextTitle}</p>
         <ol role="list" class="contact__steps">
           {
-            next.map((step, i) => (
+            t.next.map((step, i) => (
               <li>
                 <span class="mono contact__num">{String(i + 1).padStart(2, "0")}</span>
                 <span>{step}</span>
@@ -53,22 +48,22 @@ const next = [
 
       <div class="contact__info">
         <div>
-          <p class="mono contact__kicker">Visit us</p>
+          <p class="mono contact__kicker">{t.visit}</p>
           <address class="contact__address">
             {site.address.street}<br />
-            {site.address.city} {site.address.postalCode}, {site.address.countryName}
+            {site.address.city} {site.address.postalCode}, {t.country}
           </address>
           <a class="link" href={mapsUrl} target="_blank" rel="noopener">
-            Open in Google Maps<span class="sr-only"> (opens in a new tab)</span>
+            {t.maps}<span class="sr-only"> {labels.newTab}</span>
             <Icon name="arrow-up-right" class="link__icon" />
           </a>
         </div>
         {
           linkedin && (
             <div>
-              <p class="mono contact__kicker">Follow us</p>
+              <p class="mono contact__kicker">{t.follow}</p>
               <a class="link contact__social" href={linkedin} target="_blank" rel="noopener">
-                BlueDot on LinkedIn<span class="sr-only"> (opens in a new tab)</span>
+                {t.linkedin}<span class="sr-only"> {labels.newTab}</span>
                 <Icon name="arrow-up-right" class="link__icon" />
               </a>
             </div>
@@ -79,7 +74,7 @@ const next = [
       {
         site.email && (
           <p class="small contact__direct">
-            Prefer email?{" "}
+            {t.email}{" "}
             <a class="link" href={`mailto:${site.email}`}>
               {site.email}
             </a>
@@ -107,7 +102,6 @@ const next = [
     left: -15%;
     width: 60%;
     aspect-ratio: 1;
-    background: radial-gradient(closest-side, rgb(7 122 231 / 0.18), transparent);
     pointer-events: none;
   }
 
@@ -182,10 +176,7 @@ const next = [
     padding: clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-m);
-    background: linear-gradient(180deg, rgba(14, 16, 26, 0.8), rgba(6, 7, 12, 0.9));
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.9), 0 0 40px -15px rgba(7, 122, 231, 0.15);
+    background: var(--bg-raise);
   }
 
   .contact__info {

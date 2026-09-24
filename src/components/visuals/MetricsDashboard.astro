@@ -1,23 +1,56 @@
 ---
+import { getLang } from "../../i18n";
+
 const sparks = {
   down: "M0 8 L20 10 L40 9 L60 16 L80 18 L100 24 L120 23 L140 29",
   up: "M0 29 L20 26 L40 27 L60 19 L80 17 L100 11 L120 12 L140 5",
   flat: "M0 30 L140 30",
 };
 
-const tiles = [
-  { label: "Cost per lead", value: "1.20", sr: "", status: "On target", tone: "good", spark: sparks.down },
-  { label: "Click-through rate", value: "↑", sr: "Rising", status: "Rising", tone: "good", spark: sparks.up },
-  { label: "Cost per click", value: "↓", sr: "Falling", status: "Falling", tone: "good", spark: sparks.down },
-  { label: "Sales", value: "0", sr: "", status: "No business impact", tone: "bad", spark: sparks.flat },
-];
+const lang = getLang(Astro.url);
+
+const copy = {
+  en: {
+    title: "Campaign overview",
+    tag: "Illustrative example",
+    tiles: [
+      ["Cost per lead", "On target", ""],
+      ["Click-through rate", "Rising", "Rising"],
+      ["Cost per click", "Falling", "Falling"],
+      ["Sales", "No business impact", ""],
+    ],
+    caption: "Every campaign metric is green. The business didn’t move.",
+  },
+  fr: {
+    title: "Vue d’ensemble de la campagne",
+    tag: "Exemple illustratif",
+    tiles: [
+      ["Coût par lead", "Dans l’objectif", ""],
+      ["Taux de clic", "En hausse", "En hausse"],
+      ["Coût par clic", "En baisse", "En baisse"],
+      ["Ventes", "Aucun impact business", ""],
+    ],
+    caption: "Tous les indicateurs de la campagne sont au vert. L’entreprise, elle, n’a pas bougé.",
+  },
+}[lang];
+
+const values = [lang === "fr" ? "1,20" : "1.20", "↑", "↓", "0"];
+const tones = ["good", "good", "good", "bad"];
+const lines = [sparks.down, sparks.up, sparks.down, sparks.flat];
+const tiles = copy.tiles.map(([label, status, sr], i) => ({
+  label,
+  value: values[i],
+  sr,
+  status,
+  tone: tones[i],
+  spark: lines[i],
+}));
 ---
 
 <figure class="dash" data-reveal>
   <div class="dash__bar">
-    <span class="dash__lights" aria-hidden="true"><i></i><i></i><i></i></span>
-    <span class="mono dash__title">Campaign overview</span>
-    <span class="mono dash__tag">Illustrative example</span>
+    <span class="mono dash__title">{copy.title}</span>
+    <span class="mono dash__tag">{copy.tag}</span>
   </div>
 
   <dl class="dash__grid">
@@ -50,7 +83,7 @@ const tiles = [
 
   <figcaption class="dash__caption">
     <span class="dash__caption-dot" aria-hidden="true"></span>
-    Every campaign metric is green. The business didn’t move.
+    {copy.caption}
   </figcaption>
 </figure>
 
@@ -59,8 +92,7 @@ const tiles = [
     overflow: hidden;
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-m);
-    background: linear-gradient(180deg, var(--bg-raise-2), var(--bg-raise));
-    box-shadow: 0 60px 140px -60px rgb(0 0 0 / 0.9);
+    background: var(--bg-raise);
   }
 
   .dash__bar {
@@ -72,20 +104,13 @@ const tiles = [
     border-bottom: 1px solid var(--line);
   }
 
-  .dash__lights {
-    display: flex;
-    gap: 6px;
-  }
-
-  .dash__lights i {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgb(255 255 255 / 0.14);
+  .dash__title {
+    color: var(--fg-2);
   }
 
   .dash__title {
-    color: var(--fg-2);
+    color: var(--fg);
+    font-weight: 600;
   }
 
   .dash__tag {
@@ -147,7 +172,6 @@ const tiles = [
 
   .dash__tile--bad {
     transition-delay: 1s;
-    background: radial-gradient(120% 90% at 100% 0%, rgb(255 107 107 / 0.14), transparent 60%);
   }
 
   :global(html.reveal-ready) .dash:not(.is-in) .dash__tile {
@@ -157,7 +181,7 @@ const tiles = [
 
   .dash__label {
     color: var(--fg-3);
-    letter-spacing: 0.08em;
+    letter-spacing: 0;
   }
 
   .dash__value {
@@ -174,34 +198,16 @@ const tiles = [
   }
 
   .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    width: fit-content;
-    padding: 0.3rem 0.6rem;
-    border-radius: var(--radius-pill);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .pill::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
+    font-size: 0.875rem;
+    font-weight: 500;
   }
 
   .pill--good {
     color: var(--positive);
-    background: rgb(82 227 160 / 0.1);
   }
 
   .pill--bad {
     color: #ff9494;
-    background: rgb(255 107 107 / 0.12);
   }
 
   .dash__spark svg {
@@ -246,13 +252,5 @@ const tiles = [
     height: 8px;
     border-radius: 50%;
     background: var(--negative);
-    box-shadow: 0 0 0 0 rgb(255 107 107 / 0.6);
-    animation: dash-pulse 2.4s ease-out infinite;
-  }
-
-  @keyframes dash-pulse {
-    to {
-      box-shadow: 0 0 0 10px rgb(255 107 107 / 0);
-    }
   }
 </style>

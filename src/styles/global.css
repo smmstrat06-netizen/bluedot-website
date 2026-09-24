@@ -3,9 +3,6 @@
    Tokens → base → layout → typography → components → motion
    ========================================================================== */
 
-/* Space Grotesk — closest available match to Creato Display */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
 :root {
   color-scheme: dark;
 
@@ -59,9 +56,11 @@
   --accent:   var(--blue);
 
   /* ── Typography ─────────────────────────────────────────────────────────── */
-  --font-display: 'Space Grotesk', 'Host Grotesk Variable', 'Host Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --font-sans:    'Space Grotesk', 'Host Grotesk Variable', 'Host Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono:    'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  /* Space Grotesk (self-hosted) is the single typeface. Labels and figures use it too,
+     so there is no separate code-style font. */
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-sans:    'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:    var(--font-sans);
 
   /* Fluid type scale */
   --step--1: clamp(0.8125rem, 0.79rem + 0.1vw,  0.875rem);
@@ -91,14 +90,14 @@
   --header-h:  5rem;
 
   /* ── Shape ──────────────────────────────────────────────────────────────── */
-  --radius-s:    6px;
-  --radius-m:    16px;
-  --radius-l:    28px;
+  --radius-s:    4px;
+  --radius-m:    8px;
+  --radius-l:    12px;
   --radius-pill: 999px;
 
   /* ── Shadows / Glows ────────────────────────────────────────────────────── */
-  --glow-blue:   0 0 60px rgb(7 122 231 / 0.45), 0 0 20px rgb(7 122 231 / 0.25);
-  --glow-purple: 0 0 60px rgb(186 109 255 / 0.35), 0 0 20px rgb(186 109 255 / 0.2);
+  --glow-blue:   none;
+  --glow-purple: none;
 
   /* ── Motion ─────────────────────────────────────────────────────────────── */
   --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
@@ -332,24 +331,26 @@ button {
   color: var(--fg-3);
 }
 
+/* Small supporting labels ("The problem", "What we do"): same typeface, sentence case */
 .mono {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 450;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
 }
 
+/* Section label: a number and a name, set quietly above the heading */
 .label {
   display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
 }
 
 .label__num {
@@ -357,12 +358,7 @@ button {
 }
 
 .label__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent, var(--blue));
-  box-shadow: 0 0 10px var(--accent, var(--blue));
-  flex-shrink: 0;
+  display: none;
 }
 
 /* Brand dot punctuation */
@@ -373,7 +369,6 @@ button {
   margin-left: 0.035em;
   border-radius: 50%;
   background: var(--dot, var(--blue));
-  box-shadow: 0 0 0.4em color-mix(in oklab, var(--dot, var(--blue)) 75%, transparent);
   vertical-align: baseline;
 }
 
@@ -402,54 +397,32 @@ button {
   white-space: nowrap;
   cursor: pointer;
   transition:
-    background-color var(--dur) var(--ease-out),
-    border-color var(--dur) var(--ease-out),
-    color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
 }
 
-.btn:active {
-  transform: scale(0.98) translateY(1px);
-}
-
-/* Primary — electric blue fill with layered depth and physical glass bevel */
+/* Primary: solid brand blue, one step deeper so white text passes 4.5:1 (4.9:1) */
 .btn--primary {
-  --btn-bg:     linear-gradient(180deg, #0988ff 0%, #077ae7 100%);
+  --btn-bg:     #0670d8;
   --btn-fg:     #ffffff;
-  --btn-border: rgba(255, 255, 255, 0.2);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.5),
-    0 8px 24px -4px rgba(7, 122, 231, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  --btn-border: #0670d8;
 }
 
 .btn--primary:hover {
-  --btn-bg:     linear-gradient(180deg, #1fa0ff 0%, #0a84f5 100%);
-  --btn-border: rgba(255, 255, 255, 0.35);
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.4),
-    0 12px 32px -4px rgba(7, 122, 231, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  transform: translateY(-1px);
+  --btn-bg:     #0561c0;
+  --btn-border: #0561c0;
 }
 
+/* Secondary: hairline outline */
 .btn--ghost {
-  --btn-bg:     rgba(255, 255, 255, 0.04);
-  --btn-border: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --btn-bg:     transparent;
+  --btn-border: rgba(255, 255, 255, 0.24);
 }
 
 .btn--ghost:hover {
-  --btn-border: rgba(255, 255, 255, 0.28);
-  --btn-bg:     rgba(255, 255, 255, 0.08);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 8px 24px -6px rgba(0, 0, 0, 0.5);
+  --btn-border: var(--fg);
   color: #ffffff;
-  transform: translateY(-1px);
 }
 
 .btn--sm {
@@ -460,19 +433,13 @@ button {
 
 /* Blue-tinted ghost variant */
 .btn--blue-ghost {
-  --btn-bg:     rgba(7, 122, 231, 0.08);
-  --btn-border: rgba(7, 122, 231, 0.35);
+  --btn-bg:     transparent;
+  --btn-border: rgba(7, 122, 231, 0.5);
   --btn-fg:     var(--blue-bright);
-  box-shadow: inset 0 1px 0 rgba(7, 122, 231, 0.2);
 }
 
 .btn--blue-ghost:hover {
-  --btn-bg:     rgba(7, 122, 231, 0.16);
-  --btn-border: rgba(7, 122, 231, 0.65);
-  box-shadow:
-    inset 0 1px 0 rgba(7, 122, 231, 0.35),
-    0 8px 24px -6px rgba(7, 122, 231, 0.3);
-  transform: translateY(-1px);
+  --btn-border: var(--blue-bright);
 }
 
 main:focus {
@@ -490,20 +457,7 @@ html.menu-open {
 }
 
 .btn__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.75;
-  transition: transform var(--dur) var(--ease-out);
-}
-
-.btn--primary .btn__dot {
-  background: rgba(255 255 255 / 0.7);
-}
-
-.btn:hover .btn__dot {
-  transform: scale(1.5);
+  display: none;
 }
 
 .btn__icon {
@@ -600,16 +554,16 @@ html.menu-open {
 
 /* ---------- Motion ---------- */
 
+/* Content eases in once, over a short distance, without staggered choreography */
 html.reveal-ready [data-reveal]:not(.is-in) {
   opacity: 0;
-  transform: translateY(1.5rem);
+  transform: translateY(0.75rem);
 }
 
 html.reveal-ready [data-reveal] {
   transition:
-    opacity var(--dur-slow) var(--ease-out),
-    transform var(--dur-slow) var(--ease-out);
-  transition-delay: calc(var(--i, 0) * 80ms);
+    opacity 0.6s var(--ease-out),
+    transform 0.6s var(--ease-out);
 }
 
 @keyframes rise {

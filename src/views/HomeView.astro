@@ -1,0 +1,130 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HomeHero from "../components/home/HomeHero.astro";
+import Belief from "../components/home/Belief.astro";
+import Divisions from "../components/home/Divisions.astro";
+import SituationPicker from "../components/home/SituationPicker.astro";
+import HowWeWork from "../components/home/HowWeWork.astro";
+import SectionLabel from "../components/SectionLabel.astro";
+import SurfaceDiagram from "../components/SurfaceDiagram.astro";
+import FAQ from "../components/FAQ.astro";
+import ContactSection from "../components/ContactSection.astro";
+import Icon from "../components/Icon.astro";
+import { getHomeData } from "../data/home";
+import { faqSchema, organizationSchema, websiteSchema } from "../lib/schema";
+import { getLang, href } from "../i18n";
+import { ui } from "../i18n/ui";
+
+const base = Astro.site!;
+const lang = getLang(Astro.url);
+const { faqs } = getHomeData(lang);
+
+const copy = {
+  en: {
+    title: "Marketing & Communication Agency in Casablanca | BlueDot",
+    description:
+      "Marketing and communication agency in Casablanca: marketing strategy, branding, content, websites and digital advertising, under one roof.",
+    pov: "Your marketing problem might not be a marketing problem.",
+    povLead:
+      "Too few leads, campaigns that don’t land, budget with little return — these are often symptoms. The cause can sit below the surface. That’s where we look first.",
+    povLink: "See what we look at",
+  },
+  fr: {
+    title: "Agence de communication & marketing digital à Casablanca | BlueDot",
+    description:
+      "Agence de communication et de marketing digital à Casablanca : stratégie marketing, branding, contenus, sites web et publicité digitale, sous un même toit.",
+    pov: "Votre problème marketing n’est peut-être pas un problème marketing.",
+    povLead:
+      "Trop peu de leads, des campagnes qui ne portent pas, un budget qui rapporte peu — ce sont souvent des symptômes. La cause peut se trouver sous la surface. C’est là que nous regardons en premier.",
+    povLink: "Voir ce que nous analysons",
+  },
+}[lang];
+---
+
+<BaseLayout
+  title={copy.title}
+  description={copy.description}
+  schema={[organizationSchema(base, lang), websiteSchema(base, lang), faqSchema(faqs)]}
+>
+  <HomeHero />
+  <Belief />
+  <Divisions />
+  <SituationPicker />
+  <HowWeWork />
+
+  <section class="section section--rule pov-section" aria-labelledby="pov-title">
+    <div class="container split">
+      <SectionLabel num="05" text={ui[lang].labels.pov} />
+      <div class="pov">
+        <div>
+          <h2 id="pov-title" class="h2" data-reveal>{copy.pov}</h2>
+          <p class="lead pov__lead" data-reveal style="--i: 1">{copy.povLead}</p>
+          <a href={href("consulting", lang, "#below-the-surface")} class="link pov__link" data-reveal style="--i: 2">
+            {copy.povLink}
+            <Icon name="arrow-right" class="link__icon link__icon--right" />
+          </a>
+        </div>
+        <SurfaceDiagram compact />
+      </div>
+    </div>
+  </section>
+
+  <FAQ num="06" items={faqs} />
+  <ContactSection num="07" />
+</BaseLayout>
+
+<style>
+  .pov-section {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pov-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--line);
+    pointer-events: none;
+  }
+
+  .pov {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  @media (min-width: 62rem) {
+    .pov {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+  }
+
+  .pov__lead {
+    margin-top: var(--space-m);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .pov__link {
+    margin-top: var(--space-l);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+  }
+
+  .pov__link :global(.link__icon) {
+    transition: transform 0.25s var(--ease-out);
+  }
+
+  .pov__link:hover :global(.link__icon) {
+    transform: translateX(4px);
+  }
+
+  .pov :global(.surface) {
+    border-color: rgba(7, 122, 231, 0.25);
+  }
+</style>

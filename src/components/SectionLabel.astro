@@ -10,7 +10,6 @@ const { num, text, accent, class: className } = Astro.props;
 ---
 
 <p class:list={["label", className]} style={accent ? `--accent: ${accent}` : undefined}>
-  <span class="label__dot" aria-hidden="true"></span>
   {num && <span class="label__num">{num}</span>}
   <span>{text}</span>
 </p>

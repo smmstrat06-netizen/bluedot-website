@@ -1,5 +1,6 @@
 ---
 import { site } from "../config/site";
+import { alternates, defaultLang, getLang, htmlLang, langs, ogLocale } from "../i18n";
 
 interface Props {
   title: string;
@@ -11,19 +12,37 @@ interface Props {
 
 const { title, description, image = "/og/home.png", noindex = false, schema = [] } = Astro.props;
 
+const lang = getLang(Astro.url);
 const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
+// Equivalent page in each language (none on the 404 page)
+const alt = noindex ? undefined : alternates(Astro.url);
+// Google Search Console ownership tag, set in .env or the hosting dashboard
+const gscToken = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 ---
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 {noindex && <meta name="robots" content="noindex, follow" />}
+{gscToken && <meta name="google-site-verification" content={gscToken} />}
+
+{
+  alt && (
+    <Fragment>
+      {langs.map((l) => (
+        <link rel="alternate" hreflang={htmlLang[l]} href={new URL(alt[l], Astro.site)} />
+      ))}
+      <link rel="alternate" hreflang="x-default" href={new URL(alt[defaultLang], Astro.site)} />
+    </Fragment>
+  )
+}
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content={site.name} />
-<meta property="og:locale" content={site.locale} />
+<meta property="og:locale" content={ogLocale[lang]} />
+{langs.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={ogLocale[l]} />)}
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />

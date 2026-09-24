@@ -1,35 +1,62 @@
 ---
 import SectionLabel from "../SectionLabel.astro";
+import { getLang } from "../../i18n";
 
-const rows = [
-  { id: "strategy", term: "Strategy", rest: "without execution stays on paper.", color: "var(--think)" },
-  { id: "creativity", term: "Creativity", rest: "without direction creates noise.", color: "var(--create)" },
-  { id: "media", term: "Media", rest: "without the right thinking wastes budget.", color: "var(--amplify)" },
-];
+const lang = getLang(Astro.url);
+
+const copy = {
+  en: {
+    label: "Why connected",
+    title: "Marketing works better when everything connects.",
+    rows: [
+      ["Strategy", "without execution stays on paper."],
+      ["Creativity", "without direction creates noise."],
+      ["Media", "without the right thinking wastes budget."],
+    ],
+    close:
+      "BlueDot connects all three. Strategy, creative and media work as one team — three complementary areas of expertise, pointed at one business objective.",
+    nodes: ["STRATEGY", "CREATIVITY", "MEDIA"],
+  },
+  fr: {
+    label: "Pourquoi tout relier",
+    title: "Le marketing fonctionne mieux quand tout est relié.",
+    rows: [
+      ["La stratégie", "sans exécution reste sur le papier."],
+      ["La créativité", "sans direction crée du bruit."],
+      ["Les médias", "sans la bonne réflexion gaspillent le budget."],
+    ],
+    close:
+      "BlueDot relie les trois. Stratégie, création et médias travaillent comme une seule équipe — trois expertises complémentaires, tournées vers un même objectif business.",
+    nodes: ["STRATÉGIE", "CRÉATIVITÉ", "MÉDIAS"],
+  },
+}[lang];
+
+const ids = ["strategy", "creativity", "media"];
+const colors = ["var(--think)", "var(--create)", "var(--amplify)"];
+const rows = copy.rows.map(([term, rest], i) => ({ id: ids[i], term, rest, color: colors[i] }));
 
 // Triangle of disciplines around BlueDot at the centroid
 const core = { x: 260, y: 283 };
 const nodes = [
-  { id: "strategy", x: 260, y: 70, label: "STRATEGY", ly: 34, color: "var(--think)" },
-  { id: "creativity", x: 80, y: 390, label: "CREATIVITY", ly: 436, color: "var(--create)" },
-  { id: "media", x: 440, y: 390, label: "MEDIA", ly: 436, color: "var(--amplify)" },
+  { id: "strategy", x: 260, y: 70, label: copy.nodes[0], ly: 34, color: "var(--think)" },
+  { id: "creativity", x: 80, y: 390, label: copy.nodes[1], ly: 436, color: "var(--create)" },
+  { id: "media", x: 440, y: 390, label: copy.nodes[2], ly: 436, color: "var(--amplify)" },
 ];
 ---
 
 <section class="section belief" aria-labelledby="belief-title">
   <div class="container split">
-    <SectionLabel num="01" text="Why connected" />
+    <SectionLabel num="01" text={copy.label} />
 
     <div class="belief__grid">
       <div class="belief__text">
-        <h2 id="belief-title" class="h2" data-reveal>Marketing works better when everything connects.</h2>
+        <h2 id="belief-title" class="h2" data-reveal>{copy.title}</h2>
 
         <ul role="list" class="belief__rows">
           {
             rows.map((r, i) => (
               <li class="belief__row" data-node={r.id} style={`--accent: ${r.color}; --i: ${i + 1}`} data-reveal>
                 <span class="belief__term">
-                  <span class="label__dot" aria-hidden="true" />
                   {r.term}
                 </span>
                 <span class="belief__rest">{r.rest}</span>
@@ -38,10 +65,7 @@ const nodes = [
           }
         </ul>
 
-        <p class="body belief__close" data-reveal>
-          BlueDot connects all three. Strategy, creative and media work as one team — three complementary areas of
-          expertise, pointed at one business objective.
-        </p>
+        <p class="body belief__close" data-reveal>{copy.close}</p>
       </div>
 
       <figure class="cd" data-reveal aria-hidden="true">
@@ -59,7 +83,6 @@ const nodes = [
           </defs>
 
           <!-- Architectural construction ring & ambient glow -->
-          <circle cx={core.x} cy={core.y} r="210" fill="url(#cd-ambient-glow)"></circle>
           <circle cx={core.x} cy={core.y} r="195" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 8" fill="none"></circle>
           <circle cx={core.x} cy={core.y} r="115" stroke="rgba(7, 122, 231, 0.12)" stroke-dasharray="3 6" fill="none"></circle>
 
@@ -88,7 +111,6 @@ const nodes = [
             ))
           }
 
-          <circle class="cd__core-glow" cx={core.x} cy={core.y} r="96" fill="url(#cd-core-glow)"></circle>
           <circle class="cd__core-pulse" cx={core.x} cy={core.y} r="24"></circle>
           <circle class="cd__core" cx={core.x} cy={core.y} r="10"></circle>
           <text class="cd__label cd__label--core" x={core.x} y={core.y + 38} text-anchor="middle">BLUEDOT</text>
@@ -115,9 +137,6 @@ const nodes = [
   .belief {
     position: relative;
     overflow: hidden;
-    background:
-      radial-gradient(ellipse 700px 500px at 85% 50%, rgba(7, 122, 231, 0.08), transparent 70%),
-      radial-gradient(ellipse 500px 400px at 15% 25%, rgba(234, 109, 32, 0.035), transparent 60%);
   }
 
   .belief::before {
@@ -127,7 +146,7 @@ const nodes = [
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(7, 122, 231, 0.35) 25%, rgba(255, 255, 255, 0.15) 50%, rgba(234, 109, 32, 0.25) 75%, transparent);
+    background: var(--line);
     pointer-events: none;
   }
 
@@ -186,7 +205,7 @@ const nodes = [
   .belief__grid:has(.cd__node[data-node="strategy"]:hover) .belief__row[data-node="strategy"],
   .belief__grid:has(.cd__node[data-node="creativity"]:hover) .belief__row[data-node="creativity"],
   .belief__grid:has(.cd__node[data-node="media"]:hover) .belief__row[data-node="media"] {
-    background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 8%, transparent), transparent 85%);
+    background: rgb(255 255 255 / 0.03);
     transform: translateX(4px);
   }
 
@@ -214,7 +233,6 @@ const nodes = [
   .belief__grid:has(.cd__node[data-node="creativity"]:hover) .belief__row[data-node="creativity"] .label__dot,
   .belief__grid:has(.cd__node[data-node="media"]:hover) .belief__row[data-node="media"] .label__dot {
     transform: scale(1.35);
-    box-shadow: 0 0 10px var(--accent);
   }
 
   .belief__rest {
@@ -250,16 +268,6 @@ const nodes = [
     margin-inline: auto;
     width: 100%;
     padding: clamp(1rem, 0.8rem + 1.2vw, 2rem);
-    border-radius: var(--radius-l);
-    background:
-      radial-gradient(circle at 50% 60%, rgba(7, 122, 231, 0.1) 0%, transparent 70%),
-      rgba(8, 11, 22, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow:
-      0 24px 48px -18px rgba(0, 0, 0, 0.7),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
   }
 
   .cd svg {
@@ -299,7 +307,6 @@ const nodes = [
 
   .cd__core {
     fill: var(--blue-sky);
-    filter: drop-shadow(0 0 10px #077AE7);
   }
 
   .cd__core-pulse {
@@ -360,7 +367,6 @@ const nodes = [
 
   .cd__dot {
     fill: var(--c);
-    filter: drop-shadow(0 0 5px var(--c));
   }
 
   /* The diagram is drawn at ~55–65% scale, so these sizes come out at 12–15px on screen */
@@ -368,7 +374,7 @@ const nodes = [
     font-family: var(--font-mono);
     font-size: 22px;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0;
     fill: var(--fg-3);
     transition: fill 0.3s var(--ease-out), font-weight 0.3s var(--ease-out);
   }
@@ -377,7 +383,7 @@ const nodes = [
   .cd__label--core {
     font-size: 21px;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0;
     fill: #ffffff;
     transform: translateY(26px);
   }
@@ -397,7 +403,6 @@ const nodes = [
   .cd__node:hover .cd__ring {
     stroke-opacity: 1;
     stroke-width: 1.8;
-    filter: drop-shadow(0 0 8px var(--c));
   }
 
   .belief__grid:has([data-node="strategy"]:hover) .cd__node[data-node="strategy"] .cd__label,
@@ -413,6 +418,5 @@ const nodes = [
   .belief__grid:has([data-node="media"]:hover) .cd__link[data-link="media"] {
     stroke-width: 2.5;
     stroke-opacity: 1;
-    filter: drop-shadow(0 0 6px var(--c));
   }
 </style>

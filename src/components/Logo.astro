@@ -1,0 +1,17 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/brand/logo.png";
+
+// Optimised WebP logo at 1x/2x/3x instead of the 1126px source PNG
+---
+
+<Image src={logo} alt="Bluedot" width={131} densities={[1, 2, 3]} format="webp" class="brand__logo" loading="eager" />
+
+<style>
+  .brand__logo {
+    display: block;
+    width: auto;
+    height: 36px;
+    object-fit: contain;
+  }
+</style>

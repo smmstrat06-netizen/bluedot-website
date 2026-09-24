@@ -1,0 +1,63 @@
+---
+import { alternates, getLang, href, htmlLang, langLabel, langs } from "../i18n";
+import { ui } from "../i18n/ui";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const lang = getLang(Astro.url);
+// Same page in the other language; the home page when there is none (404)
+const alt = alternates(Astro.url) ?? { fr: href("home", "fr"), en: href("home", "en") };
+---
+
+<nav class:list={["lang", className]} aria-label={ui[lang].langSwitch}>
+  {
+    langs.map((l, i) => (
+      <Fragment>
+        {i > 0 && <span class="lang__sep" aria-hidden="true" />}
+        <a
+          href={alt[l]}
+          class="lang__link"
+          hreflang={htmlLang[l]}
+          lang={htmlLang[l]}
+          aria-current={l === lang ? "true" : undefined}
+        >
+          {l.toUpperCase()}<span class="sr-only"> — {langLabel[l]}</span>
+        </a>
+      </Fragment>
+    ))
+  }
+</nav>
+
+<style>
+  .lang {
+    display: flex;
+    align-items: center;
+  }
+
+  .lang__link {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.25rem;
+    min-height: 44px;
+    padding-inline: 0.35rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--fg-3);
+    transition: color var(--dur) var(--ease-out);
+  }
+
+  .lang__link:hover,
+  .lang__link[aria-current="true"] {
+    color: var(--fg);
+  }
+
+  .lang__sep {
+    width: 1px;
+    height: 0.85rem;
+    background: var(--line-strong);
+  }
+</style>

@@ -1,23 +1,43 @@
 ---
 import SectionLabel from "../SectionLabel.astro";
 import Icon from "../Icon.astro";
-import { situations } from "../../data/home";
+import { getHomeData } from "../../data/home";
+import { getLang, href } from "../../i18n";
+import { ui } from "../../i18n/ui";
+
+const lang = getLang(Astro.url);
+const { situations } = getHomeData(lang);
+
+const copy = {
+  en: {
+    title: "Which sounds most like you?",
+    lead: "Pick the situation closest to yours and see where we would begin.",
+    legend: "Choose the situation that sounds most like yours",
+    kicker: "Where we’d start",
+    talk: "Talk to us about this",
+  },
+  fr: {
+    title: "Laquelle vous ressemble le plus ?",
+    lead: "Choisissez la situation la plus proche de la vôtre et voyez par où nous commencerions.",
+    legend: "Choisissez la situation qui vous ressemble le plus",
+    kicker: "Par où nous commencerions",
+    talk: "En parler avec nous",
+  },
+}[lang];
 ---
 
 <section id="start" class="section section--rule start" aria-labelledby="start-title">
   <div class="container">
     <div class="split">
-      <SectionLabel num="03" text="Where to start" />
+      <SectionLabel num="03" text={ui[lang].footer.start} />
       <div>
-        <h2 id="start-title" class="h2" data-reveal>Which sounds most like you?</h2>
-        <p class="lead start__lead" data-reveal style="--i: 1">
-          Pick the situation closest to yours and see where we would begin.
-        </p>
+        <h2 id="start-title" class="h2" data-reveal>{copy.title}</h2>
+        <p class="lead start__lead" data-reveal style="--i: 1">{copy.lead}</p>
       </div>
     </div>
 
     <fieldset class="picker" data-reveal>
-      <legend class="sr-only">Choose the situation that sounds most like yours</legend>
+      <legend class="sr-only">{copy.legend}</legend>
       <div class="picker__grid">
         {
           situations.map((s, i) => (
@@ -30,15 +50,14 @@ import { situations } from "../../data/home";
               </label>
 
               <div class="picker__result" data-for={s.id} style={`--accent: ${s.accent}`}>
-                <p class="mono picker__kicker">Where we’d start</p>
+                <p class="mono picker__kicker">{copy.kicker}</p>
                 <p class="picker__division">
                   {s.start}<span class="dot" style={`--dot: ${s.accent}`} />
                 </p>
                 <p class="body picker__answer">{s.answer}</p>
                 <div class="picker__actions">
-                  <a href={`/contact/?interest=${s.interest}`} class="btn btn--primary">
-                    <span class="btn__dot" aria-hidden="true" />
-                    Talk to us about this
+                  <a href={href("contact", lang, `?interest=${s.interest}`)} class="btn btn--primary">
+                    {copy.talk}
                   </a>
                   <a href={s.link.href} class="link">
                     {s.link.label}
@@ -58,9 +77,6 @@ import { situations } from "../../data/home";
   .start {
     position: relative;
     overflow: hidden;
-    background:
-      radial-gradient(ellipse 700px 500px at 85% 30%, rgba(7, 122, 231, 0.05), transparent 70%),
-      radial-gradient(ellipse 500px 400px at 15% 75%, rgba(186, 109, 255, 0.03), transparent 60%);
   }
 
   .start::before {
@@ -70,7 +86,7 @@ import { situations } from "../../data/home";
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(7, 122, 231, 0.25) 20%, rgba(255, 255, 255, 0.12) 50%, rgba(234, 109, 32, 0.2) 80%, transparent);
+    background: var(--line);
     pointer-events: none;
   }
 
@@ -117,10 +133,7 @@ import { situations } from "../../data/home";
     padding: 1.35rem 1.15rem;
     border-bottom: 1px solid var(--line);
     cursor: pointer;
-    border-radius: var(--radius-s);
-    transition:
-      background-color 0.25s var(--ease-out),
-      transform 0.25s var(--ease-out);
+    transition: background-color 0.2s var(--ease-out);
   }
 
   .picker__option::before {
@@ -152,7 +165,7 @@ import { situations } from "../../data/home";
   .picker__num {
     padding-left: 0.25rem;
     font-size: 0.8125rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0;
     color: var(--fg-3);
     transition: color 0.25s var(--ease-out);
   }
@@ -190,8 +203,7 @@ import { situations } from "../../data/home";
   }
 
   .picker__option:has(:checked) {
-    background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 8%, transparent), rgba(255, 255, 255, 0.02) 85%);
-    transform: translateX(4px);
+    background: rgb(255 255 255 / 0.03);
   }
 
   .picker__option:has(:checked)::before {
@@ -211,7 +223,6 @@ import { situations } from "../../data/home";
   .picker__option:has(:checked) .picker__radio {
     border-color: var(--accent);
     background: color-mix(in oklab, var(--accent) 15%, transparent);
-    box-shadow: 0 0 12px color-mix(in oklab, var(--accent) 35%, transparent);
   }
 
   .picker__option:has(:checked) .picker__radio::after {
@@ -234,16 +245,10 @@ import { situations } from "../../data/home";
       margin-top: 1rem;
       margin-bottom: 1.5rem;
       padding: 1.75rem;
-      border: 1px solid color-mix(in oklab, var(--accent) 30%, rgba(255, 255, 255, 0.08));
-      border-radius: var(--radius-m);
-      background:
-        radial-gradient(80% 60% at 100% 0%, color-mix(in oklab, var(--accent) 15%, transparent), transparent 70%),
-        linear-gradient(180deg, rgba(12, 16, 30, 0.9) 0%, rgba(8, 10, 20, 0.96) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow:
-        0 16px 36px -12px rgba(0, 0, 0, 0.6),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--line-strong);
+      border-top: 2px solid var(--accent);
+      border-radius: 0;
+      background: var(--bg-raise);
     }
   }
 
@@ -253,17 +258,10 @@ import { situations } from "../../data/home";
       top: calc(var(--header-h) + 2rem);
       margin-top: var(--space-l);
       padding: clamp(1.75rem, 1.25rem + 1.8vw, 2.75rem);
-      border: 1px solid color-mix(in oklab, var(--accent) 30%, rgba(255, 255, 255, 0.08));
-      border-radius: var(--radius-m);
-      background:
-        radial-gradient(80% 60% at 100% 0%, color-mix(in oklab, var(--accent) 18%, transparent), transparent 70%),
-        linear-gradient(180deg, rgba(12, 16, 32, 0.85) 0%, rgba(8, 10, 22, 0.95) 100%);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      box-shadow:
-        0 24px 50px -15px rgba(0, 0, 0, 0.7),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12),
-        0 0 35px -10px color-mix(in oklab, var(--accent) 22%, transparent);
+      border: 1px solid var(--line-strong);
+      border-top: 2px solid var(--accent);
+      border-radius: 0;
+      background: var(--bg-raise);
     }
   }
 
@@ -284,8 +282,7 @@ import { situations } from "../../data/home";
 
   .picker__kicker {
     font-size: 0.75rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    letter-spacing: 0;
     color: var(--accent);
     font-weight: 600;
   }

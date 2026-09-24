@@ -1,4 +1,6 @@
 ---
+import { getLang } from "../i18n";
+
 interface Props {
   /** Names only, without the diagnostic questions */
   compact?: boolean;
@@ -6,13 +8,37 @@ interface Props {
 
 const { compact = false } = Astro.props;
 
-const layers = [
-  { name: "Positioning", q: "Is it clear who you’re for — and why they should choose you?" },
-  { name: "Offer", q: "Is what you sell easy to understand, compare and buy?" },
-  { name: "Organization", q: "Do your teams have the roles, skills and capacity to deliver?" },
-  { name: "Sales", q: "Does marketing hand over to a sales process that converts?" },
-  { name: "Leadership", q: "Is there one clear direction everyone is working toward?" },
-];
+const copy = {
+  en: {
+    above: "Above the surface",
+    below: "Below the surface",
+    top: "Marketing",
+    symptoms: "Too few leads · Campaigns that don’t land · Budget with little return",
+    layers: [
+      { name: "Positioning", q: "Is it clear who you’re for — and why they should choose you?" },
+      { name: "Offer", q: "Is what you sell easy to understand, compare and buy?" },
+      { name: "Organization", q: "Do your teams have the roles, skills and capacity to deliver?" },
+      { name: "Sales", q: "Does marketing hand over to a sales process that converts?" },
+      { name: "Leadership", q: "Is there one clear direction everyone is working toward?" },
+    ],
+    caption: "Marketing is the visible layer. Below it sit positioning, offer, organization, sales and leadership.",
+  },
+  fr: {
+    above: "À la surface",
+    below: "Sous la surface",
+    top: "Marketing",
+    symptoms: "Trop peu de leads · Des campagnes qui ne portent pas · Un budget qui rapporte peu",
+    layers: [
+      { name: "Positionnement", q: "Est-il clair à qui vous vous adressez — et pourquoi on devrait vous choisir ?" },
+      { name: "Offre", q: "Ce que vous vendez est-il facile à comprendre, à comparer et à acheter ?" },
+      { name: "Organisation", q: "Vos équipes ont-elles les rôles, les compétences et la capacité pour livrer ?" },
+      { name: "Ventes", q: "Le marketing passe-t-il le relais à un processus commercial qui convertit ?" },
+      { name: "Leadership", q: "Y a-t-il une direction claire vers laquelle tout le monde avance ?" },
+    ],
+    caption:
+      "Le marketing est la couche visible. En dessous se trouvent le positionnement, l’offre, l’organisation, les ventes et le leadership.",
+  },
+}[getLang(Astro.url)];
 
 // A repeating wave, drawn twice as wide as the box so it can loop
 const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22 : 6} ${(i + 1) * 50} 14`).join(" ");
@@ -20,10 +46,10 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
 
 <figure class:list={["surface", { "surface--compact": compact }]} data-reveal>
   <div class="surface__above">
-    <p class="mono surface__zone">Above the surface</p>
+    <p class="mono surface__zone">{copy.above}</p>
     <p class="surface__top">
-      <span class="surface__top-name">Marketing<span class="dot" style="--dot: var(--think)"></span></span>
-      {!compact && <span class="surface__symptoms">Too few leads · Campaigns that don’t land · Budget with little return</span>}
+      <span class="surface__top-name">{copy.top}<span class="dot" style="--dot: var(--think)"></span></span>
+      {!compact && <span class="surface__symptoms">{copy.symptoms}</span>}
     </p>
   </div>
 
@@ -33,10 +59,10 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
     </svg>
   </div>
 
-  <p class="mono surface__zone surface__zone--below">Below the surface</p>
+  <p class="mono surface__zone surface__zone--below">{copy.below}</p>
   <ol role="list" class="surface__layers">
     {
-      layers.map((l, i) => (
+      copy.layers.map((l, i) => (
         <li class="surface__layer" style={`--d: ${i}`}>
           <span class="surface__depth mono">−{String(i + 1).padStart(2, "0")}</span>
           <span class="surface__name">{l.name}</span>
@@ -46,9 +72,7 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
     }
   </ol>
 
-  <figcaption class="sr-only">
-    Marketing is the visible layer. Below it sit positioning, offer, organization, sales and leadership.
-  </figcaption>
+  <figcaption class="sr-only">{copy.caption}</figcaption>
 </figure>
 
 <style>
@@ -58,11 +82,7 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
     overflow: hidden;
     border: 1px solid rgba(7, 122, 231, 0.22);
     border-radius: var(--radius-m);
-    background: linear-gradient(180deg, rgba(8, 12, 24, 0.92) 0%, rgba(5, 10, 28, 0.96) 58%, rgba(2, 5, 16, 0.99) 100%);
-    box-shadow:
-      0 24px 48px -18px rgba(0, 0, 0, 0.7),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      0 0 35px -12px rgba(7, 122, 231, 0.2);
+    background: var(--bg-raise);
   }
 
   .surface__above {
@@ -73,16 +93,14 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
 
   .surface__zone {
     font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    letter-spacing: 0;
     color: var(--fg-3);
   }
 
   .surface__zone--below {
     padding: 1.25rem var(--pad) 0.75rem;
     font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    letter-spacing: 0;
     color: var(--blue-bright);
     font-weight: 600;
   }
@@ -132,7 +150,6 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
     stroke: var(--blue-bright);
     stroke-opacity: 0.75;
     stroke-width: 1.25;
-    filter: drop-shadow(0 0 4px rgba(7, 122, 231, 0.45));
     vector-effect: non-scaling-stroke;
   }
 
@@ -171,7 +188,7 @@ const wave = Array.from({ length: 24 }, (_, i) => `Q ${i * 50 + 25} ${i % 2 ? 22
   .surface__depth {
     color: var(--blue-bright);
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0;
   }
 
   .surface__name {

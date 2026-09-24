@@ -1,39 +1,39 @@
 ---
 import SectionLabel from "./SectionLabel.astro";
 import Icon from "./Icon.astro";
-import { divisions, type DivisionId } from "../data/divisions";
+import { getDivisions, type DivisionId } from "../data/divisions";
+import { getLang } from "../i18n";
+import { ui } from "../i18n/ui";
 
 interface Props {
   num: string;
-  current: DivisionId;
+  /** Division whose page this is; omit to show all three */
+  current?: DivisionId;
   title: string;
   text: string;
 }
 
 const { num, current, title, text } = Astro.props;
-const others = divisions.filter((d) => d.id !== current);
+const lang = getLang(Astro.url);
+const t = ui[lang].labels;
+const others = getDivisions(lang).filter((d) => d.id !== current);
 ---
 
 <section class="section section--rule" aria-labelledby="xlinks-title">
   <div class="container">
     <div class="split">
-      <SectionLabel num={num} text="Connected" />
+      <SectionLabel num={num} text={t.connected} />
       <div>
         <h2 id="xlinks-title" class="h2 xlinks__title" data-reveal>{title}</h2>
         <p class="lead xlinks__lead" data-reveal style="--i: 1">{text}</p>
       </div>
     </div>
 
-    <ul role="list" class="xlinks offset">
+    <ul role="list" class:list={["xlinks", others.length > 2 ? "xlinks--three" : "offset"]}>
       {
         others.map((d, i) => (
           <li data-reveal style={`--i: ${i}`}>
             <a href={d.href} class="xcard" style={`--accent: ${d.accent}`}>
-              <span class="xcard__orbit" aria-hidden="true">
-                <span class="xcard__spin">
-                  <span class="xcard__planet" />
-                </span>
-              </span>
               <span class="mono xcard__meta">
                 {d.index} — {d.verb}
               </span>
@@ -42,7 +42,7 @@ const others = divisions.filter((d) => d.id !== current);
               </span>
               <span class="xcard__text">{d.summary}</span>
               <span class="xcard__cta">
-                Explore {d.name}
+                {t.explore} {d.name}
                 <Icon name="arrow-right" class="xcard__icon" />
               </span>
             </a>
@@ -86,24 +86,14 @@ const others = divisions.filter((d) => d.id !== current);
     width: 100%;
     min-height: 19rem;
     padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
-    overflow: hidden;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-strong);
     border-radius: var(--radius-m);
-    background: rgba(12, 14, 22, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    transition:
-      border-color 0.5s var(--ease-out),
-      background-color 0.5s var(--ease-out),
-      box-shadow 0.5s var(--ease-out),
-      transform 0.4s var(--ease-out);
+    background: var(--bg-raise);
+    transition: border-color 0.2s var(--ease-out);
   }
 
   .xcard:hover {
-    border-color: color-mix(in oklab, var(--accent) 55%, transparent);
-    background: rgba(18, 20, 32, 0.85);
-    box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.7), 0 0 24px -6px color-mix(in oklab, var(--accent) 25%, transparent);
-    transform: translateY(-2px);
+    border-color: var(--accent);
   }
 
   .xcard__orbit {
@@ -136,7 +126,6 @@ const others = divisions.filter((d) => d.id !== current);
     margin-left: -4px;
     border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 14px var(--accent);
   }
 
   @keyframes xcard-spin {
@@ -188,5 +177,11 @@ const others = divisions.filter((d) => d.id !== current);
 
   .xcard:hover :global(.xcard__icon) {
     transform: translateX(4px);
+  }
+
+  @media (min-width: 62rem) {
+    .xlinks--three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 </style>

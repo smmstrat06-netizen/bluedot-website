@@ -1,24 +1,47 @@
 ---
 import SectionLabel from "../SectionLabel.astro";
-import { steps, principles } from "../../data/home";
+import { getHomeData } from "../../data/home";
+import { getLang } from "../../i18n";
+import { ui } from "../../i18n/ui";
+
+interface Props {
+  num?: string;
+  title?: string;
+  /** Defaults to the home page steps and principles */
+  steps?: { title: string; text: string }[];
+  principles?: [string, string][];
+}
+
+const lang = getLang(Astro.url);
+const t = ui[lang].labels;
+const home = getHomeData(lang);
+
+const copy = {
+  en: { title: "We don’t believe in one-size-fits-all marketing.", kicker: "What you can hold us to" },
+  fr: { title: "Nous ne croyons pas au marketing prêt-à-porter.", kicker: "Nos engagements" },
+}[lang];
+
+const { num = "04", title = copy.title, steps = home.steps } = Astro.props;
+const principles = Astro.props.steps ? (Astro.props.principles ?? []) : home.principles;
 ---
 
 <section id="how" class="section section--rule how" aria-labelledby="how-title">
   <div class="container">
     <div class="split">
-      <SectionLabel num="04" text="How we work" />
-      <h2 id="how-title" class="h2" data-reveal>We don’t believe in one-size-fits-all marketing.</h2>
+      <SectionLabel num={num} text={t.how} />
+      <h2 id="how-title" class="h2" data-reveal>{title}</h2>
     </div>
 
     <ol role="list" class="steps" data-reveal>
       {
         steps.map((s, i) => (
           <li class="step" style={`--i: ${i}`}>
-            <span class="step__watermark" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
             <span class="step__marker" aria-hidden="true">
               <span class="step__dot" />
             </span>
-            <p class="mono step__num">Step {String(i + 1).padStart(2, "0")}</p>
+            <p class="mono step__num">
+              {t.step} {String(i + 1).padStart(2, "0")}
+            </p>
             <h3 class="step__title">{s.title}</h3>
             <p class="body step__text">{s.text}</p>
           </li>
@@ -26,18 +49,20 @@ import { steps, principles } from "../../data/home";
       }
     </ol>
 
-    <div class="principles">
-      <h3 class="mono principles__kicker">What you can hold us to</h3>
-      <ul role="list" class="principles__list">
-        {
-          principles.map(([a, b], i) => (
-            <li class="principle" data-reveal style={`--i: ${i}`}>
-              <span class="principle__a">{a}</span> <span class="principle__b">{b}</span>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
+    {
+      principles.length > 0 && (
+        <div class="principles">
+          <h3 class="mono principles__kicker">{copy.kicker}</h3>
+          <ul role="list" class="principles__list">
+            {principles.map(([a, b], i) => (
+              <li class="principle" data-reveal style={`--i: ${i}`}>
+                <span class="principle__a">{a}</span> <span class="principle__b">{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
   </div>
 </section>
 
@@ -45,9 +70,6 @@ import { steps, principles } from "../../data/home";
   .how {
     position: relative;
     overflow: hidden;
-    background:
-      radial-gradient(ellipse 700px 500px at 20% 50%, rgba(7, 122, 231, 0.05), transparent 70%),
-      radial-gradient(ellipse 500px 400px at 80% 80%, rgba(234, 109, 32, 0.03), transparent 60%);
   }
 
   .how::before {
@@ -57,7 +79,7 @@ import { steps, principles } from "../../data/home";
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(7, 122, 231, 0.25) 20%, rgba(255, 255, 255, 0.12) 50%, rgba(234, 109, 32, 0.2) 80%, transparent);
+    background: var(--line);
     pointer-events: none;
   }
 
@@ -121,55 +143,10 @@ import { steps, principles } from "../../data/home";
     position: relative;
   }
 
-  .step__watermark {
-    display: none;
-    position: absolute;
-    top: 1rem;
-    right: 1.5rem;
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 2rem + 1.5vw, 4rem);
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.05em;
-    color: rgba(255, 255, 255, 0.04);
-    pointer-events: none;
-    user-select: none;
-    transition: color 0.4s var(--ease-out);
-  }
-
+  /* Desktop: three open columns on a shared timeline, no cards */
   @media (min-width: 48rem) {
-    /* Only shown once steps become cards with room beside the heading */
-    .step__watermark {
-      display: block;
-    }
-
     .step {
-      padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem) 1.6rem 2rem;
-      border-radius: var(--radius-m);
-      background: linear-gradient(180deg, rgba(14, 18, 34, 0.4) 0%, rgba(9, 12, 22, 0.6) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      box-shadow:
-        0 16px 36px -12px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      transition:
-        background-color 0.3s var(--ease-out),
-        border-color 0.3s var(--ease-out),
-        box-shadow 0.3s var(--ease-out),
-        transform 0.3s var(--ease-out);
-    }
-
-    .step:hover {
-      background: linear-gradient(180deg, rgba(16, 22, 42, 0.65) 0%, rgba(10, 14, 28, 0.8) 100%);
-      border-color: rgba(7, 122, 231, 0.35);
-      box-shadow:
-        0 20px 44px -12px rgba(0, 0, 0, 0.7),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        0 0 25px -8px rgba(7, 122, 231, 0.25);
-      transform: translateY(-2px);
-    }
-
-    .step:hover .step__watermark {
-      color: rgba(7, 122, 231, 0.14);
+      padding-right: var(--grid-gap);
     }
   }
 
@@ -185,7 +162,6 @@ import { steps, principles } from "../../data/home";
     border: 1px solid rgba(7, 122, 231, 0.4);
     border-radius: 50%;
     background: var(--bg);
-    box-shadow: 0 0 12px rgba(7, 122, 231, 0.25);
   }
 
   @media (min-width: 48rem) {
@@ -200,7 +176,6 @@ import { steps, principles } from "../../data/home";
     height: 6px;
     border-radius: 50%;
     background: var(--blue);
-    box-shadow: 0 0 10px var(--blue);
     transition: transform 0.6s var(--ease-out);
     transition-delay: calc(var(--i) * 450ms + 400ms);
   }
@@ -212,7 +187,7 @@ import { steps, principles } from "../../data/home";
   .step__num {
     color: var(--fg-3);
     font-size: 0.8125rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0;
   }
 
   @media (min-width: 48rem) {
@@ -248,8 +223,7 @@ import { steps, principles } from "../../data/home";
     color: var(--fg-3);
     font-size: 0.8125rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    letter-spacing: 0;
   }
 
   .principles__list {
@@ -270,46 +244,11 @@ import { steps, principles } from "../../data/home";
     }
   }
 
+  /* Four statements under a hairline, no boxes */
   .principle {
-    position: relative;
-    overflow: hidden;
     font-family: var(--font-display);
-    padding: 1.5rem 1.6rem;
-    border-radius: var(--radius-s);
-    background: rgba(12, 16, 28, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    transition:
-      background-color 0.25s var(--ease-out),
-      border-color 0.25s var(--ease-out),
-      box-shadow 0.25s var(--ease-out),
-      transform 0.25s var(--ease-out);
-  }
-
-  .principle::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 15%;
-    bottom: 15%;
-    width: 2.5px;
-    border-radius: 2px;
-    background: var(--blue);
-    transform: scaleY(0);
-    transition: transform 0.3s var(--ease-out);
-  }
-
-  .principle:hover {
-    background: rgba(16, 22, 40, 0.6);
-    border-color: rgba(7, 122, 231, 0.25);
-    box-shadow:
-      0 14px 32px -10px rgba(0, 0, 0, 0.6),
-      inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    transform: translateY(-2px);
-  }
-
-  .principle:hover::before {
-    transform: scaleY(1);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-strong);
   }
 
   .principle__a {

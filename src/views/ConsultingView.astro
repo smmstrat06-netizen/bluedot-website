@@ -1,0 +1,123 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import DivisionHero from "../components/DivisionHero.astro";
+import Positioning from "../components/Positioning.astro";
+import ServicesSection from "../components/ServicesSection.astro";
+import SectionLabel from "../components/SectionLabel.astro";
+import SurfaceDiagram from "../components/SurfaceDiagram.astro";
+import CrossLinks from "../components/CrossLinks.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { getDivision } from "../data/divisions";
+import { serviceSchema } from "../lib/schema";
+import { getLang, href } from "../i18n";
+import { ui } from "../i18n/ui";
+
+// No Consulting page existed in the source material; copy is built from
+// BlueDot's home page (Consulting summary, expertise list, point of view).
+const lang = getLang(Astro.url);
+const d = getDivision("consulting", lang);
+
+const copy = {
+  en: {
+    posTitle: "Strategy shouldn’t stay on paper.",
+    posText:
+      "BlueDot Consulting works from inside your business — alongside your leadership and teams — to set a clear marketing direction and make sure it turns into action.",
+    fit: [
+      "You need senior marketing leadership, without a full-time hire.",
+      "There’s plenty of marketing activity, but no clear direction.",
+      "Your positioning or offer needs sharpening before you invest more.",
+    ],
+    servicesTitle: "From direction to leadership.",
+    servicesLead: "Open a service to see the problem it solves, what we do and what you get.",
+    pov: "Your marketing problem might not be a marketing problem.",
+    povLead:
+      "Too few leads, campaigns that don’t land, budget with little return — these are often symptoms. The cause can sit below the surface, so that’s where we look first.",
+    crossTitle: "Direction, connected to execution.",
+    crossText:
+      "When the direction is set, BlueDot Agency brings it to life and BlueDot Media amplifies it — without losing the thinking along the way.",
+    ctaTitle: "Let’s find the real problem first.",
+    ctaText: "Tell us where you are. We’ll look at what’s underneath — and what to do next.",
+  },
+  fr: {
+    posTitle: "La stratégie ne doit pas rester sur le papier.",
+    posText:
+      "BlueDot Consulting travaille depuis l’intérieur de votre entreprise — aux côtés de votre direction et de vos équipes — pour fixer une direction marketing claire et s’assurer qu’elle se traduit en actions.",
+    fit: [
+      "Vous avez besoin d’un leadership marketing senior, sans recrutement à temps plein.",
+      "Les actions marketing sont nombreuses, mais sans direction claire.",
+      "Votre positionnement ou votre offre doit être affiné avant d’investir davantage.",
+    ],
+    servicesTitle: "De la direction au leadership.",
+    servicesLead: "Ouvrez un service pour voir le problème qu’il résout, ce que nous faisons et ce que vous obtenez.",
+    pov: "Votre problème marketing n’est peut-être pas un problème marketing.",
+    povLead:
+      "Trop peu de leads, des campagnes qui ne portent pas, un budget qui rapporte peu — ce sont souvent des symptômes. La cause peut se trouver sous la surface : c’est là que nous regardons en premier.",
+    crossTitle: "Une direction reliée à l’exécution.",
+    crossText:
+      "Une fois la direction fixée, BlueDot Agency lui donne vie et BlueDot Media l’amplifie — sans perdre la réflexion en chemin.",
+    ctaTitle: "Commençons par trouver le vrai problème.",
+    ctaText: "Dites-nous où vous en êtes. Nous regarderons ce qu’il y a en dessous — et ce qu’il faut faire ensuite.",
+  },
+}[lang];
+
+const schema = serviceSchema(
+  {
+    name: d.h1,
+    description: d.seo.description,
+    path: d.href,
+    serviceType: d.capabilities,
+    trail: [{ name: `BlueDot ${d.name}`, path: d.href }],
+  },
+  Astro.site!,
+  lang,
+);
+---
+
+<BaseLayout title={d.seo.title} description={d.seo.description} image="/og/consulting.png" accent={d.accent} schema={schema}>
+  <DivisionHero division={d} lead={d.summary} />
+
+  <Positioning num="01" title={copy.posTitle} text={copy.posText} fit={copy.fit} />
+
+  <ServicesSection
+    num="02"
+    title={copy.servicesTitle}
+    lead={copy.servicesLead}
+    services={d.services}
+    group="consulting-services"
+  />
+
+  <section id="below-the-surface" class="section section--rule" aria-labelledby="surface-title">
+    <div class="container">
+      <div class="split">
+        <SectionLabel num="03" text={ui[lang].labels.pov} />
+        <div>
+          <h2 id="surface-title" class="h2" data-reveal>{copy.pov}</h2>
+          <p class="lead page__lead" data-reveal style="--i: 1">{copy.povLead}</p>
+        </div>
+      </div>
+      <div class="offset page__visual">
+        <SurfaceDiagram />
+      </div>
+    </div>
+  </section>
+
+  <CrossLinks num="04" current="consulting" title={copy.crossTitle} text={copy.crossText} />
+
+  <CtaBand
+    title={copy.ctaTitle}
+    text={copy.ctaText}
+    cta={d.cta}
+    href={href("contact", lang, "?interest=consulting")}
+    accent={d.accent}
+  />
+</BaseLayout>
+
+<style>
+  .page__lead {
+    margin-top: var(--space-m);
+  }
+
+  .page__visual {
+    margin-top: var(--space-2xl);
+  }
+</style>

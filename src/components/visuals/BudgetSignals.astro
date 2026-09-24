@@ -1,15 +1,30 @@
 ---
-const rows = [
-  { id: "scale", verb: "Scale", when: "When it’s working", note: "More budget behind what performs." },
-  { id: "move", verb: "Move", when: "When it works harder elsewhere", note: "Investment shifts to where it earns more." },
-  { id: "stop", verb: "Stop", when: "When it isn’t paying off", note: "Budget freed for what matters." },
-];
+import { getLang } from "../../i18n";
+
+const copy = {
+  en: {
+    rows: [
+      { id: "scale", verb: "Scale", when: "When it’s working", note: "More budget behind what performs." },
+      { id: "move", verb: "Move", when: "When it works harder elsewhere", note: "Investment shifts to where it earns more." },
+      { id: "stop", verb: "Stop", when: "When it isn’t paying off", note: "Budget freed for what matters." },
+    ],
+    caption: "Illustrative budget decisions",
+  },
+  fr: {
+    rows: [
+      { id: "scale", verb: "Renforcer", when: "Quand ça marche", note: "Plus de budget sur ce qui performe." },
+      { id: "move", verb: "Déplacer", when: "Quand il rapporte plus ailleurs", note: "L’investissement va là où il rapporte le plus." },
+      { id: "stop", verb: "Arrêter", when: "Quand ça ne rapporte pas", note: "Du budget libéré pour ce qui compte." },
+    ],
+    caption: "Exemples de décisions budgétaires",
+  },
+}[getLang(Astro.url)];
 ---
 
 <figure class="signals" data-reveal>
   <ul role="list" class="signals__list">
     {
-      rows.map((r, i) => (
+      copy.rows.map((r, i) => (
         <li class:list={["signal", `signal--${r.id}`]} style={`--i: ${i}`}>
           <div>
             <p class="signal__verb">{r.verb}</p>
@@ -24,7 +39,7 @@ const rows = [
       ))
     }
   </ul>
-  <figcaption class="mono signals__caption">Illustrative budget decisions</figcaption>
+  <figcaption class="mono signals__caption">{copy.caption}</figcaption>
 </figure>
 
 <style>

@@ -1,29 +1,32 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CosmosCanvas from "../components/CosmosCanvas.astro";
+import { href } from "../i18n";
+import { ui } from "../i18n/ui";
+
+// One 404 page serves both languages: French first, with a way into the English site
+const t = ui.fr.notFound;
+const en = ui.en.notFound;
 ---
 
-<BaseLayout
-  title="Page not found"
-  description="The page you’re looking for doesn’t exist."
-  noindex
-  mobileCta={false}
->
+<BaseLayout title="Page introuvable" description="La page que vous cherchez n’existe pas." noindex mobileCta={false}>
   <section class="nf" aria-labelledby="nf-title">
     <CosmosCanvas scene="system" cx={0.5} cy={0.42} scale={0.3} />
     <div class="nf__shade" aria-hidden="true"></div>
     <div class="container nf__inner">
       <p class="label">
-        <span class="label__dot" aria-hidden="true"></span>
         <span class="label__num">404</span>
-        <span>Off the map</span>
+        <span>{t.label}</span>
       </p>
-      <h1 id="nf-title" class="h1 nf__title">This dot isn’t on the map<span class="dot"><span class="sr-only">.</span></span></h1>
-      <p class="lead nf__lead">The page you’re looking for has moved or never existed. Let’s get you back on course.</p>
+      <h1 id="nf-title" class="h1 nf__title">{t.title}<span class="dot"><span class="sr-only">.</span></span></h1>
+      <p class="lead nf__lead">{t.lead}</p>
       <div class="nf__actions">
-        <a href="/" class="btn btn--primary"><span class="btn__dot" aria-hidden="true"></span>Back to home</a>
-        <a href="/contact/" class="btn btn--ghost">Contact us</a>
+        <a href={href("home", "fr")} class="btn btn--primary">{t.home}</a>
+        <a href={href("contact", "fr")} class="btn btn--ghost">{t.contact}</a>
       </div>
+      <p class="small nf__en" lang="en">
+        {en.title}. <a class="link" href={href("home", "en")} hreflang="en">{t.en}</a>
+      </p>
     </div>
   </section>
 </BaseLayout>
@@ -63,5 +66,10 @@ import CosmosCanvas from "../components/CosmosCanvas.astro";
     flex-wrap: wrap;
     gap: 0.75rem;
     margin-top: var(--space-l);
+  }
+
+  .nf__en {
+    margin-top: var(--space-l);
+    color: var(--fg-3);
   }
 </style>

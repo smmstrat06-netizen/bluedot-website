@@ -1,7 +1,16 @@
 ---
+import Logo from "./Logo.astro";
 import { site, mapsUrl } from "../config/site";
-import { divisions } from "../data/divisions";
+import { getDivisions } from "../data/divisions";
+import { getLang, href } from "../i18n";
+import { ui } from "../i18n/ui";
 import Icon from "./Icon.astro";
+
+const lang = getLang(Astro.url);
+const t = ui[lang];
+const divisions = getDivisions(lang);
+const home = href("home", lang);
+const contact = href("contact", lang);
 
 const year = new Date().getFullYear();
 const socials = site.social.filter((s) => s.href);
@@ -9,6 +18,12 @@ const words = [
   { text: "Think", dot: "var(--think)" },
   { text: "Create", dot: "var(--create)" },
   { text: "Amplify", dot: "var(--amplify)" },
+];
+const expertise = [
+  { label: lang === "fr" ? "Création de site web" : "Website design", href: href("website", lang) },
+  { label: lang === "fr" ? "Événementiel" : "Events", href: href("events", lang) },
+  { label: t.footer.how, href: `${home}#how` },
+  { label: t.footer.start, href: `${home}#start` },
 ];
 ---
 
@@ -29,22 +44,21 @@ const words = [
           ))
         }
       </p>
-      <a href="/contact/" class="btn btn--primary">
-        <span class="btn__dot" aria-hidden="true"></span>
-        Start a conversation
+      <a href={contact} class="btn btn--primary">
+        {t.footer.cta}
       </a>
     </div>
 
     <div class="footer__grid">
       <div class="footer__brand">
-        <a href="/" class="brand" aria-label="BlueDot — home">
-          <img src="/brand-assets/logo.png" alt="Bluedot" class="brand__logo" width="140" height="40" />
+        <a href={home} class="brand" aria-label={t.brandHome}>
+          <Logo />
         </a>
-        <p class="small muted">Marketing strategy, creative execution and media performance — under one roof.</p>
+        <p class="small muted">{t.footer.about}</p>
       </div>
 
-      <nav class="footer__col" aria-label="Divisions">
-        <p class="mono footer__heading">Divisions</p>
+      <nav class="footer__col" aria-label={t.footer.divisions}>
+        <p class="mono footer__heading">{t.footer.divisions}</p>
         <ul role="list">
           {
             divisions.map((d) => (
@@ -60,25 +74,31 @@ const words = [
         </ul>
       </nav>
 
-      <nav class="footer__col" aria-label="Company">
-        <p class="mono footer__heading">BlueDot</p>
+      <nav class="footer__col" aria-label={t.footer.company}>
+        <p class="mono footer__heading">{t.footer.company}</p>
         <ul role="list">
-          <li><a href="/#how" class="footer__link">How we work</a></li>
-          <li><a href="/#start" class="footer__link">Where to start</a></li>
-          <li><a href="/contact/" class="footer__link">Contact</a></li>
+          {
+            expertise.map((item) => (
+              <li>
+                <a href={item.href} class="footer__link">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </nav>
 
       <div class="footer__col">
-        <p class="mono footer__heading">Get in touch</p>
+        <p class="mono footer__heading">{t.footer.touch}</p>
         <ul role="list">
           <li>
             <a href={mapsUrl} class="footer__link footer__address" target="_blank" rel="noopener">
               <address>
                 {site.address.street}<br />
-                {site.address.city} {site.address.postalCode}
+                {site.address.city} {site.address.postalCode}, {t.contact.country}
               </address>
-              <span class="sr-only">(opens Google Maps in a new tab)</span>
+              <span class="sr-only">{t.footer.mapsSr}</span>
             </a>
           </li>
           {
@@ -100,14 +120,14 @@ const words = [
               </li>
             ))
           }
-          <li><a href="/contact/" class="footer__link">Send us a message</a></li>
+          <li><a href={contact} class="footer__link">{t.footer.message}</a></li>
         </ul>
       </div>
     </div>
 
     <div class="footer__bottom">
-      <p class="small muted">© {year} BlueDot. All rights reserved.</p>
-      <a href="#main" class="small footer__link footer__totop">Back to top</a>
+      <p class="small muted">© {year} BlueDot. {t.footer.rights}</p>
+      <a href="#main" class="small footer__link footer__totop">{t.footer.top}</a>
     </div>
   </div>
 </footer>
@@ -125,7 +145,6 @@ const words = [
     position: absolute;
     inset: auto -20% -60% -20%;
     height: 90%;
-    background: radial-gradient(50% 50% at 50% 100%, rgb(7 122 231 / 0.18), transparent 70%);
     pointer-events: none;
   }
 
@@ -186,12 +205,6 @@ const words = [
     min-height: 44px;
   }
 
-  .brand__logo {
-    height: 36px;
-    width: auto;
-    display: block;
-    object-fit: contain;
-  }
 
   .footer__heading {
     color: var(--fg-3);

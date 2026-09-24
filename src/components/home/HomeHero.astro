@@ -1,45 +1,63 @@
 ---
+import { Picture } from "astro:assets";
 import Icon from "../Icon.astro";
-import { divisions } from "../../data/divisions";
+import { getDivisions } from "../../data/divisions";
+import { getLang } from "../../i18n";
+import heroCosmic from "../../assets/brand/hero-cosmic.jpg";
 
+const lang = getLang(Astro.url);
+const divisions = getDivisions(lang);
+
+// The brand line stays in English in both languages
 const words = [
   { text: "Think", dot: "var(--think)" },
   { text: "Create", dot: "var(--create)" },
   { text: "Amplify", dot: "var(--amplify)" },
 ];
+
+const copy = {
+  en: {
+    h1: "Marketing & communication agency in Casablanca",
+    lead: "BlueDot brings marketing strategy, creative execution and media performance together under one roof — so every part of your marketing works toward the same business result.",
+    talk: "Let’s talk",
+    start: "Find your starting point",
+    index: "Explore our divisions",
+  },
+  fr: {
+    h1: "Agence de communication & marketing digital à Casablanca",
+    lead: "BlueDot réunit stratégie marketing, création et performance média sous un même toit — pour que chaque partie de votre marketing serve le même résultat business.",
+    talk: "Parlons-en",
+    start: "Trouver votre point de départ",
+    index: "Découvrir nos pôles",
+  },
+}[lang];
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <!-- Cosmic background — photographic planetary imagery from brand kit -->
+  <!-- Cosmic background: compressed AVIF/WebP in several widths, loaded first -->
   <div class="hero__bg" aria-hidden="true">
-    <img
-      src="/brand-assets/hero-cosmic.jpg"
+    <Picture
+      src={heroCosmic}
       alt=""
-      class="hero__bg-img"
-      width="1400"
-      height="787"
+      formats={["webp"]}
+      widths={[640, 960, 1376]}
+      sizes="100vw"
+      quality={62}
       loading="eager"
+      fetchpriority="high"
       decoding="async"
     />
     <!-- Luminous gradient overlay: ensures 100% legibility on left while preserving cosmic vibrancy on right -->
     <div class="hero__overlay"></div>
   </div>
 
-  <!-- Atmospheric glows matching brand kit colors -->
-  <div class="hero__glows" aria-hidden="true">
-    <div class="hero__glow hero__glow--blue"></div>
-    <div class="hero__glow hero__glow--violet"></div>
-  </div>
-
   <!-- Main Hero Stage: Perfectly balanced above the fold -->
   <div class="container hero__stage">
     <div class="hero__content">
-      <p class="label hero__eyebrow">
-        <span class="label__dot" aria-hidden="true"></span>
-        <span>Marketing strategy <span class="nowrap">· Creative</span> <span class="nowrap">· Media</span></span>
-      </p>
+      <!-- The page's h1 names the service and the city; the brand line below stays the visual headline -->
+      <h1 id="hero-title" class="label hero__eyebrow">{copy.h1}</h1>
 
-      <h1 id="hero-title" class="hero__title">
+      <p class="hero__title">
         {
           words.map((w, i) => (
             <Fragment>
@@ -52,20 +70,16 @@ const words = [
             </Fragment>
           ))
         }
-      </h1>
-
-      <p class="lead hero__lead">
-        BlueDot brings marketing strategy, creative execution and media performance together under one roof — so every part
-        of your marketing works toward the same business result.
       </p>
+
+      <p class="lead hero__lead">{copy.lead}</p>
 
       <div class="hero__actions">
         <a href="#contact" class="btn btn--primary hero__btn-primary">
-          <span class="btn__dot" aria-hidden="true"></span>
-          Let's talk
+          {copy.talk}
         </a>
         <a href="#start" class="btn btn--ghost hero__btn-ghost">
-          Find your starting point
+          {copy.start}
           <Icon name="arrow-down" class="btn__icon btn__icon--down" />
         </a>
       </div>
@@ -73,14 +87,13 @@ const words = [
   </div>
 
   <!-- Bottom Division Dock: Elevated frosted glass ticker bridging hero to content -->
-  <nav class="container hero__index" aria-label="Explore our divisions">
+  <nav class="container hero__index" aria-label={copy.index}>
     <ul role="list" class="hindex">
       {
         divisions.map((d) => (
           <li class="hindex__cell">
             <a href={d.href} class="hindex__item" style={`--accent: ${d.accent}`}>
               <span class="hindex__meta mono">
-                <span class="label__dot" aria-hidden="true" />
                 <span class="hindex__num">{d.index} —</span>
                 {d.verb}
               </span>
@@ -116,13 +129,12 @@ const words = [
     pointer-events: none;
   }
 
-  .hero__bg-img {
+  .hero__bg :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: right 38%;
     opacity: 0.85;
-    transition: opacity 0.8s ease;
   }
 
   .hero__overlay {
@@ -151,7 +163,7 @@ const words = [
   }
 
   @media (max-width: 47.99rem) {
-    .hero__bg-img {
+    .hero__bg :global(img) {
       object-position: 72% top;
       opacity: 0.35;
     }
@@ -163,50 +175,6 @@ const words = [
         rgb(0 0 0 / 0.98) 100%
       );
     }
-  }
-
-  /* ── Atmospheric glow accents ── */
-  .hero__glows {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .hero__glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(140px);
-    pointer-events: none;
-  }
-
-  .hero__glow--blue {
-    width: 50rem;
-    height: 50rem;
-    top: 15%;
-    right: -10rem;
-    background: radial-gradient(circle, rgb(7 122 231 / 0.28) 0%, transparent 65%);
-    animation: hero-float-blue 10s ease-in-out infinite alternate;
-  }
-
-  .hero__glow--violet {
-    width: 35rem;
-    height: 35rem;
-    bottom: 5%;
-    left: -8rem;
-    background: radial-gradient(circle, rgb(186 109 255 / 0.14) 0%, transparent 65%);
-    animation: hero-float-violet 14s ease-in-out infinite alternate;
-  }
-
-  @keyframes hero-float-blue {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-30px, 40px) scale(1.08); }
-  }
-
-  @keyframes hero-float-violet {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(40px, -20px) scale(1.12); }
   }
 
   /* ── Stage & Content ── */
@@ -274,7 +242,7 @@ const words = [
     font-size: 0.9375rem;
   }
 
-  /* ── Division index dock — architectural mission-control bridge ── */
+  /* ── Division index: a plain three-column row under a hairline ── */
   .hero__index {
     position: relative;
     z-index: 3;
@@ -284,19 +252,15 @@ const words = [
   .hindex {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-m) var(--radius-m) 0 0;
-    background: linear-gradient(180deg, rgba(8, 12, 24, 0.75) 0%, rgba(5, 7, 16, 0.92) 100%);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      0 -8px 24px -12px rgba(0, 0, 0, 0.6);
-    overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
   }
 
   .hindex__cell + .hindex__cell {
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .hindex__cell + .hindex__cell .hindex__item {
+    padding-left: clamp(1rem, 0.5rem + 1.5vw, 2rem);
   }
 
   .hindex__item {
@@ -304,12 +268,12 @@ const words = [
     display: grid;
     gap: 0.3rem;
     height: 100%;
-    padding: 1.15rem 2.5rem 1.3rem 1.35rem;
+    padding: 1.25rem 2.5rem 1.5rem 0;
     transition: background-color var(--dur) var(--ease-out);
   }
 
-  .hindex__item:hover {
-    background: rgba(255, 255, 255, 0.035);
+  .hindex__item:hover .hindex__name {
+    color: var(--accent);
   }
 
   .hindex__meta {
@@ -317,7 +281,7 @@ const words = [
     align-items: center;
     gap: 0.5rem;
     font-size: 0.75rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0;
     color: var(--fg-3);
   }
 
@@ -422,7 +386,7 @@ const words = [
 
     /* Tighter tracking keeps the eyebrow on one line on most phones */
     .hero__eyebrow {
-      letter-spacing: 0.08em;
+      letter-spacing: 0;
       gap: 0.55rem;
     }
 
@@ -443,7 +407,7 @@ const words = [
       justify-content: center;
       gap: 0.35rem;
       font-size: 0.75rem;
-      letter-spacing: 0.08em;
+      letter-spacing: 0;
       white-space: nowrap;
     }
 

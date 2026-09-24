@@ -1,12 +1,14 @@
 ---
-import "@fontsource-variable/host-grotesk";
-import "@fontsource-variable/geist-mono";
+import "@fontsource-variable/space-grotesk";
 import "../styles/global.css";
-import hostGroteskLatin from "@fontsource-variable/host-grotesk/files/host-grotesk-latin-wght-normal.woff2?url";
+import spaceGroteskLatin from "@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url";
 import SEO from "../components/SEO.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import MobileCta from "../components/MobileCta.astro";
+import { getLang, htmlLang } from "../i18n";
+import { ui } from "../i18n/ui";
+import { site } from "../config/site";
 
 interface Props {
   title: string;
@@ -21,25 +23,54 @@ interface Props {
 }
 
 const { title, description, image, noindex, schema, accent, mobileCta = true } = Astro.props;
+const lang = getLang(Astro.url);
+// Local development visits stay out of analytics
+const gtmId = import.meta.env.PROD ? site.gtmId : "";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={htmlLang[lang]}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {
+      gtmId && (
+        <script is:inline define:vars={{ gtmId }}>
+          (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+            var f = d.getElementsByTagName(s)[0],
+              j = d.createElement(s),
+              dl = l != "dataLayer" ? "&l=" + l : "";
+            j.async = true;
+            j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+            f.parentNode.insertBefore(j, f);
+          })(window, document, "script", "dataLayer", gtmId);
+        </script>
+      )
+    }
     <meta name="theme-color" content="#000000" />
     <meta name="color-scheme" content="dark" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" href={hostGroteskLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={spaceGroteskLatin} as="font" type="font/woff2" crossorigin />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <SEO title={title} description={description} image={image} noindex={noindex} schema={schema} />
   </head>
   <body style={accent ? `--accent: ${accent}` : undefined}>
-    <a class="skip-link" href="#main">Skip to content</a>
+    {
+      gtmId && (
+        <noscript
+          ><iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+            height="0"
+            width="0"
+            style="display:none;visibility:hidden"
+            title="Google Tag Manager"></iframe
+          ></noscript>
+      )
+    }
+    <a class="skip-link" href="#main">{ui[lang].skip}</a>
     <Header />
     <main id="main" tabindex="-1">
       <slot />

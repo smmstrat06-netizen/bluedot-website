@@ -1,44 +1,61 @@
 /**
  * Contact form: prefill from ?interest=, inline validation, JSON submit.
- * The endpoint comes from PUBLIC_FORM_ENDPOINT. Without one, submissions are
- * simulated in development and fail visibly (with an email fallback) in production.
+ * Posts to the site's own /api/contact/ route, which forwards the enquiry to
+ * the Make webhook server-side (see src/pages/api/contact.ts).
  */
+import { EMAIL, isPhone } from "../lib/contact";
 
 type Field = HTMLInputElement | HTMLTextAreaElement;
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const ENDPOINT = "/api/contact/";
 
-// Moroccan numbers (05/06/07…, +212…) or any international number written with + or 00
-const isPhone = (value: string) => {
-  const v = value.replace(/[\s.\-()]/g, "");
-  if (/^0[5-7]\d{8}$/.test(v)) return true;
-  if (/^(\+|00)212/.test(v)) return /^(\+|00)212[5-7]\d{8}$/.test(v);
-  return /^(\+|00)[1-9]\d{7,14}$/.test(v);
-};
+// Messages follow the page language (<html lang="fr-MA"> or "en")
+const lang = document.documentElement.lang.startsWith("fr") ? "fr" : "en";
+
+const text = {
+  en: {
+    name: "Please enter your full name.",
+    company: "Please enter your company name.",
+    city: "Please enter your city.",
+    phone: "Please enter your phone number.",
+    phoneInvalid: "Please enter a valid phone number, like 06 12 34 56 78 or +212 6 12 34 56 78.",
+    email: "Please enter your email address.",
+    emailInvalid: "Please enter a valid email address, like name@company.com.",
+    sending: "Sending…",
+    send: "Send message",
+    failed: "Sorry — your message couldn’t be sent. Please try again in a moment.",
+    failedEmail: (email: string) => `Sorry — your message couldn’t be sent. Please try again, or email us at ${email}.`,
+    tooMany: "You’ve sent several messages in a short time. Please try again in a few minutes.",
+  },
+  fr: {
+    name: "Veuillez indiquer votre nom complet.",
+    company: "Veuillez indiquer le nom de votre société.",
+    city: "Veuillez indiquer votre ville.",
+    phone: "Veuillez indiquer votre numéro de téléphone.",
+    phoneInvalid: "Veuillez indiquer un numéro valide, par exemple 06 12 34 56 78 ou +212 6 12 34 56 78.",
+    email: "Veuillez indiquer votre adresse e-mail.",
+    emailInvalid: "Veuillez indiquer une adresse e-mail valide, par exemple nom@societe.ma.",
+    sending: "Envoi en cours…",
+    send: "Envoyer le message",
+    failed: "Désolé, votre message n’a pas pu être envoyé. Veuillez réessayer dans un instant.",
+    failedEmail: (email: string) =>
+      `Désolé, votre message n’a pas pu être envoyé. Veuillez réessayer, ou écrivez-nous à ${email}.`,
+    tooMany: "Vous avez envoyé plusieurs messages en peu de temps. Veuillez réessayer dans quelques minutes.",
+  },
+}[lang];
 
 // Required fields only; the message is optional
 const rules: Record<string, (value: string) => string> = {
-  name: (v) => (v.trim() ? "" : "Please enter your full name."),
-  company: (v) => (v.trim() ? "" : "Please enter your company name."),
-  city: (v) => (v.trim() ? "" : "Please enter your city."),
-  phone: (v) =>
-    !v.trim()
-      ? "Please enter your phone number."
-      : isPhone(v)
-        ? ""
-        : "Please enter a valid phone number, like 06 12 34 56 78 or +212 6 12 34 56 78.",
-  email: (v) =>
-    !v.trim()
-      ? "Please enter your email address."
-      : EMAIL.test(v.trim())
-        ? ""
-        : "Please enter a valid email address, like name@company.com.",
+  name: (v) => (v.trim() ? "" : text.name),
+  company: (v) => (v.trim() ? "" : text.company),
+  city: (v) => (v.trim() ? "" : text.city),
+  phone: (v) => (!v.trim() ? text.phone : isPhone(v) ? "" : text.phoneInvalid),
+  email: (v) => (!v.trim() ? text.email : EMAIL.test(v.trim()) ? "" : text.emailInvalid),
 };
 
 document.querySelectorAll<HTMLFormElement>("[data-contact-form]").forEach(initForm);
 
 function initForm(form: HTMLFormElement) {
-  const endpoint = form.dataset.endpoint ?? "";
   const email = form.dataset.email ?? "";
   const status = form.querySelector<HTMLElement>("[data-form-status]");
   const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -74,7 +91,7 @@ function initForm(form: HTMLFormElement) {
     if (!submit || !submitLabel) return;
     submit.disabled = loading;
     submit.setAttribute("aria-busy", String(loading));
-    submitLabel.textContent = loading ? "Sending…" : "Send message";
+    submitLabel.textContent = loading ? text.sending : text.send;
   };
 
   const showSuccess = (name: string) => {
@@ -117,33 +134,26 @@ function initForm(form: HTMLFormElement) {
       interest: data.getAll("interest").map(String),
       message: String(data.get("message") ?? "").trim(),
       page: window.location.pathname,
+      lang,
     };
 
     setLoading(true);
     try {
-      if (!endpoint) {
-        if (import.meta.env.DEV) {
-          await new Promise((resolve) => setTimeout(resolve, 900));
-          console.info("[BlueDot] PUBLIC_FORM_ENDPOINT is not set — simulated submission:", payload);
-          showSuccess(name);
-          return;
-        }
-        throw new Error("Form endpoint not configured");
-      }
-
-      const response = await fetch(endpoint, {
+      const response = await fetch(ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(payload),
       });
+      if (response.status === 429) {
+        if (status) status.textContent = text.tooMany;
+        return;
+      }
       if (!response.ok) throw new Error(`Request failed: ${response.status}`);
       showSuccess(name);
     } catch (error) {
       console.error(error);
       if (status) {
-        status.textContent = email
-          ? `Sorry — your message couldn’t be sent. Please try again, or email us at ${email}.`
-          : "Sorry — your message couldn’t be sent. Please try again in a moment.";
+        status.textContent = email ? text.failedEmail(email) : text.failed;
       }
     } finally {
       setLoading(false);
