@@ -24,7 +24,7 @@ Copy `.env.example` to `.env`, or set these variables in your hosting dashboard:
 | --- | --- |
 | `SITE_URL` | Optional. Production domain, `https://bluedot-mktg.com` by default. Used for canonical URLs, hreflang, Open Graph tags, `robots.txt` and the sitemap. |
 | `FORM_WEBHOOK_URL` | The Make webhook that receives contact enquiries. Server-only: see below. |
-| `PUBLIC_CONTACT_EMAIL` | Optional. Shown next to the form, in the footer, and in the form's error message. |
+| `PUBLIC_CONTACT_EMAIL` | Optional. Replaces the default public email, `info@bluedot-mktg.com` (set in `src/config/site.ts`). Shown next to the form, in the footer, in the form's error message and in structured data. |
 | `PUBLIC_GOOGLE_SITE_VERIFICATION` | Optional. Only needed if Search Console is verified with the "HTML tag" method instead of Google Tag Manager. Paste only the `content` value of the tag. |
 
 `PUBLIC_` variables are baked into the JavaScript at build time and are visible to anyone. Never put an API key or webhook URL in one. After changing a variable in Vercel, redeploy.
@@ -130,7 +130,7 @@ After launch:
 These couldn't be completed from the material provided and need BlueDot's input:
 
 1. **Form webhook:** set `FORM_WEBHOOK_URL` in Vercel, redeploy, and send a test enquiry from the live site.
-2. **Contact email and Instagram:** set `PUBLIC_CONTACT_EMAIL`, and add an Instagram URL to `social` in `src/config/site.ts` if BlueDot has one. The office address and LinkedIn page are already set there.
+2. **Instagram:** add an Instagram URL to `social` in `src/config/site.ts` if BlueDot has one. The office address, `info@bluedot-mktg.com` and the LinkedIn page are already set there.
 3. **Consulting page copy:** no Consulting page was supplied. Its copy is based on the home page (Consulting summary, expertise list, "your marketing problem might not be a marketing problem"). Please review.
 4. **Partly hidden source lines**, reconstructed and marked `[reconstructed]` in `src/data/divisions.ts`:
    - Consulting summary: "…from *marketing strategy* to fractional CMO leadership"

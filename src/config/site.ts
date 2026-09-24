@@ -7,8 +7,9 @@ export const site = {
   tagline: "Think. Create. Amplify.",
   // Google Tag Manager container (public ID). Also lets Search Console verify the site.
   gtmId: "GTM-PP47N3SF",
-  // TODO: public contact email (also settable via PUBLIC_CONTACT_EMAIL)
-  email: import.meta.env.PUBLIC_CONTACT_EMAIL ?? "",
+  // Public contact email: footer, contact section, form error message and structured data.
+  // PUBLIC_CONTACT_EMAIL overrides it.
+  email: import.meta.env.PUBLIC_CONTACT_EMAIL || "info@bluedot-mktg.com",
   // Office address: shown in the contact section and footer, and used in structured data
   address: {
     street: "3È Étage, Résidence Harmony, Rue de Larache",
